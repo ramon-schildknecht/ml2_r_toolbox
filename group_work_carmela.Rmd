@@ -1,0 +1,72 @@
+---
+title: "group_work"
+output: html_document
+---
+Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
+
+Install packages
+```{r}
+library("corrplot")
+library("gplots")
+library("kohonen")
+library("plot3D")
+library("factoextra")
+library("stringr")
+library("dplyr")
+```
+
+Data preparation:
+```{r}
+# clean the memory
+rm(list = ls(all = TRUE)) 
+
+# load data
+df <- read.csv("C:/Users/ca_we/OneDrive/HSLU/Master/Semester 3/Machine Learning 2/Projektarbeit/winequality-red.csv")
+
+# count the missing values (NA) in the data frame
+sum(is.na(df))
+
+# check if the columns are numeric
+sapply(df, is.numeric)
+
+```
+
+```{r}
+# scale the data
+df_scaled <- scale(df)
+
+df_scaled
+
+```
+```{r}
+## Methode 1: K-Means-Clustering
+
+
+# Run K-means
+km.out <- kmeans(df_scaled,3,nstart =50)
+plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
+
+
+# Check the outcome
+km.out
+km.out$withinss
+km.out$tot.withinss
+
+
+
+# Finding best value for k
+Sum_of_squared_distances= []
+
+for (k in 1:15){
+    km = kmeans(df_scaled, k, nstart=50)
+    Sum_of_squared_distances.append(km$tot.withinss)
+    k=k+1
+}
+
+plot(Sum_of_squared_distances, main ="K-Means Clustering", xlab ="Number of Clusters", ylab ="Total within-cluster sum of squares", pch =20, cex =2)
+
+
+```
+
+
+
