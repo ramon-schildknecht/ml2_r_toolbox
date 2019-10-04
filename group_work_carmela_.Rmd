@@ -1,0 +1,169 @@
+---
+title: "group_work"
+output: html_document
+---
+Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
+
+Install packages
+```{r}
+library("corrplot")
+library("gplots")
+library("kohonen")
+library("plot3D")
+library("factoextra")
+library("stringr")
+library("dplyr")
+library("dendextend")
+library("ape")
+library("RColorBrewer")
+
+```
+
+Data preparation:
+```{r}
+# clean the memory
+rm(list = ls(all = TRUE)) 
+
+# load data
+df <- read.csv("C:/Users/ca_we/OneDrive/HSLU/Master/Semester 3/Machine Learning 2/Projektarbeit/winequality-red.csv")
+
+# count the missing values (NA) in the data frame
+sum(is.na(df))
+
+# check if the columns are numeric
+sapply(df, is.numeric)
+
+```
+
+```{r}
+# scale the data
+df_scaled <- scale(df)
+df_scaled
+
+```
+```{r}
+### Methode 1: K-Means-Clustering
+
+# Scale data
+df_scaled <- scale(df)
+df_scaled
+
+# Run K-means
+km.out <- kmeans(df_scaled,3,nstart =50)
+plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
+
+# Check the outcome
+km.out
+km.out$withinss
+km.out$tot.withinss
+
+# Find best value for k
+wss <- 0 # intialise
+number_of_clusters_tested <- 10
+for (i in 1:number_of_clusters_tested){
+  km.out <- kmeans(df_scaled,i,nstart =50)
+  wss[i] <- km.out$tot.withinss
+}
+
+plot(1:number_of_clusters_tested, wss, type="b", xlab="Number of Clusters",ylab="Total within-cluster sum of squares")
+
+
+
+```
+```{r}
+### Methode 2: Hierarchical Clustering
+
+# Scale data
+df_scaled <- scale(df)
+df_scaled
+
+# Calculate distances between data (default method = euclidean):
+distances <- dist(df_scaled, method = "euclidean")
+
+# Compute hierarchical clustering based in distances calculated above:
+hc <- hclust(distances)
+
+# Computes dendrogram graphical representation:
+dend <- as.dendrogram(hc)
+
+# Graphical representation
+plot(dend)
+
+# Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
+str(dend)
+
+
+
+## Transpose data:
+df_transposed <- t(df_scaled)
+
+# Calculate distances between data (default method = euclidean):
+distances_t <- dist(df_transposed, method = "euclidean")
+
+# Compute hierarchical clustering based in distances calculated above:
+hc_t <- hclust(distances_t)
+
+# Computes dendrogram graphical representation:
+dend_t <- as.dendrogram(hc_t)
+
+# Graphical representation
+plot(dend_t)
+
+# Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
+str(dend_t)
+
+
+
+
+## Use a specific linkage or distance methode in hc clustering
+
+# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
+# Possible distance methods: "euclidean", "maximum", "manhattan","canberra","binary", "minkowski"
+
+hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
+plot(hc)
+
+
+# Missing correlation-based methods (spearman, kendall): using library(factoextra) for these methods
+# Compute the dissimilarity matrix with different distance types: "euclidean", "manhattan", "pearson", "spearman", "kendall"
+res.dist <- get_dist(df_scaled, method = "kendall")
+
+# Visualize the dissimilarity matrix
+fviz_dist(res.dist, lab_size = 8)
+
+# Compute hierarchical clustering with different linkage types:"single", "complete", "average", "centroid", "ward.D", "ward.D2"
+res.hc <- hclust(res.dist, method = "ward")
+
+# Visualize the tree
+fviz_dend(res.hc)
+
+# Or simply
+plot(res.hc)
+
+
+
+### Methode 3: Heatmap
+
+# Scale data
+df_scaled <- scale(df)
+df_scaled
+
+# Create heatmap
+heatmap(df_scaled)
+
+# Make your own color code brewer.pal(n, name)
+# n Number of different colors in the palette, minimum 3, maximum depending on palette
+# name Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
+palette <- colorRampPalette(brewer.pal(9, "YlGnBu"))
+
+# Row- and column-wise clustering, with wished linkage and distance method:
+hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward")
+hc2 <- hclust(as.dist(1-cor(df_scaled, method="spearman")), method="single")
+
+# Plot heatmap
+heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palette,scale="row", density.info="none", trace="none")
+
+```
+
+
+
