@@ -4,21 +4,34 @@ output: html_document
 ---
 Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
 
-Install packages
-```{r install_packages, warning=TRUE}
-library("corrplot")
-library("gplots")
-library("kohonen")
-library("plot3D")
-library("factoextra")
-library("stringr")
-library("dplyr")
-library("dendextend")
-library("ape")
-library("RColorBrewer")
-library("DataExplorer")
+# Setup
+## Install packages
 
+```{r install_packages, message=FALSE, warning=FALSE}
+library(corrplot)
+library(gplots)
+library(kohonen)
+library(plot3D)
+library(factoextra)
+library(stringr)
+library(dplyr)
+library(dendextend)
+library(ape)
+library(RColorBrewer)
+library(rmarkdown)
+library(DataExplorer)
+library(tidyverse)
+# library(checkpoint)  # not working properly @Ramon
 ```
+
+
+## Set checkpoint
+
+```{r set checkpoint, message=FALSE, warning=FALSE}
+# checkpoint("2019-09-20")  # not working properly @Ramon
+```
+
+
 
 # Data 
 ## Preparation
@@ -27,11 +40,7 @@ library("DataExplorer")
 rm(list = ls(all = TRUE)) 
 
 # load data
-<<<<<<< HEAD
-df <- read.csv("/Users/marcelulrich/Documents/GitHub/ml2_r_toolbox/winequality-red.csv")
-=======
 df <- read.csv("winequality-red.csv")
->>>>>>> 2d8f58092c95fd9e62f07cf2b735377119d59b19
 
 # count the missing values (NA) in the data frame
 sum(is.na(df))
@@ -45,7 +54,9 @@ sapply(df, is.numeric)
 ## Exploration
 
 ```{r exploration}
-create_report(mtcars)
+glimpse(df)
+# View(df)
+create_report(df)  # not working @Ramon, works @Lars
 ```
 
 
