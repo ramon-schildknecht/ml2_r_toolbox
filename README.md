@@ -5,9 +5,20 @@ This is a taks from the module "Applied Machine Learning and Predictive Modellin
 
 
 ## Autors
-to be defined
+- [Carmela Wey](https://github.com/CarmelitaW)
+- [Daniel Barco](https://github.com/danielbarco)
+- [Lars Gisler](https://github.com/LarsGisler)
+- [Marcel Ulrich](https://github.com/MarcelUlrich)
+- [Ramon Schildknecht](https://github.com/ramon-schildknecht)
+
+## Goal
+- offer R Toolbox to apply different unsupervised machine learning algorithms that work with almost any input datasets
+- how to use these machine learning algorithms
+- how to interprete the results, supported with our wine data set example
 
 
 ## Outlook
-We are developing a R Toolbox to apply different unsupervised machine learning algoriths that work with almost any input datasets.
+We are developing a R Toolbox to apply different unsupervised machine learning algorithms that work with almost any input datasets.
+
+
 
