@@ -177,4 +177,25 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 ```
 
 
+#TSNE
+```{r}
+library(Rtsne)
+# datapoint later in the plot: data_label<-as.factor(rownames(data))
+# Run tSNE:
+
+# we need to remove duplicates
+
+tsne <- Rtsne(df_scaled[!duplicated(df_scaled), ], dims = 2,
+            perplexity=30, verbose=TRUE,
+            max_iter = 500)
+
+# Use table row names to label the
+# datapoint later in the plot: 
+data_label<-as.factor(colnames(df_scaled))
+
+# Plot data and labels:
+plot(tsne$Y, col=data_label)
+
+str(tsne)
+```
 
