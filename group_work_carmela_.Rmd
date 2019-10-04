@@ -25,7 +25,7 @@ Data preparation:
 rm(list = ls(all = TRUE)) 
 
 # load data
-df <- read.csv("C:/Users/ca_we/OneDrive/HSLU/Master/Semester 3/Machine Learning 2/Projektarbeit/winequality-red.csv")
+df <- read.csv("/Users/marcelulrich/Documents/GitHub/ml2_r_toolbox/winequality-red.csv")
 
 # count the missing values (NA) in the data frame
 sum(is.na(df))
@@ -49,7 +49,7 @@ df_scaled <- scale(df)
 df_scaled
 
 # Run K-means
-km.out <- kmeans(df_scaled,3,nstart =50)
+km.out <- kmeans(df_scaled, 2,nstart =50)
 plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
 
 # Check the outcome
@@ -59,17 +59,28 @@ km.out$tot.withinss
 
 # Find best value for k
 wss <- 0 # intialise
-number_of_clusters_tested <- 10
+wss_dif <- 0
+number_of_clusters_tested <- 20
 for (i in 1:number_of_clusters_tested){
   km.out <- kmeans(df_scaled,i,nstart =50)
   wss[i] <- km.out$tot.withinss
+  if(i > 1){ # only enter condition for two clusters and higher
+    wss_dif[i-1] <- wss[i-1]-wss[i] # take difference from previous "total within-cluster sum of squares" and current one.
+  }
+    
 }
 
 plot(1:number_of_clusters_tested, wss, type="b", xlab="Number of Clusters",ylab="Total within-cluster sum of squares")
-
-
-
+plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",ylab="Difference between Total within-cluster sum of squares")
 ```
+First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with two dimensions.
+
+Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+
+Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be enjoyed with caution.
+
+
+
 ```{r}
 ### Methode 2: Hierarchical Clustering
 
@@ -164,6 +175,6 @@ hc2 <- hclust(as.dist(1-cor(df_scaled, method="spearman")), method="single")
 heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palette,scale="row", density.info="none", trace="none")
 
 ```
-
+Second plot: 
 
 
