@@ -25,7 +25,11 @@ Data preparation:
 rm(list = ls(all = TRUE)) 
 
 # load data
+<<<<<<< HEAD
 df <- read.csv("/Users/marcelulrich/Documents/GitHub/ml2_r_toolbox/winequality-red.csv")
+=======
+df <- read.csv("winequality-red.csv")
+>>>>>>> 2d8f58092c95fd9e62f07cf2b735377119d59b19
 
 # count the missing values (NA) in the data frame
 sum(is.na(df))
@@ -177,4 +181,25 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 ```
 Second plot: 
 
+#TSNE
+```{r}
+library(Rtsne)
+# datapoint later in the plot: data_label<-as.factor(rownames(data))
+# Run tSNE:
+
+# we need to remove duplicates
+
+tsne <- Rtsne(df_scaled[!duplicated(df_scaled), ], dims = 2,
+            perplexity=30, verbose=TRUE,
+            max_iter = 500)
+
+# Use table row names to label the
+# datapoint later in the plot: 
+data_label<-as.factor(colnames(df_scaled))
+
+# Plot data and labels:
+plot(tsne$Y, col=data_label)
+
+str(tsne)
+```
 
