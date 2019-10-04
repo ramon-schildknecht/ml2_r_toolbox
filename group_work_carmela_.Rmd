@@ -5,7 +5,7 @@ output: html_document
 Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
 
 Install packages
-```{r}
+```{r install_packages, warning=TRUE}
 library("corrplot")
 library("gplots")
 library("kohonen")
@@ -16,11 +16,13 @@ library("dplyr")
 library("dendextend")
 library("ape")
 library("RColorBrewer")
+library("DataExplorer")
 
 ```
 
-Data preparation:
-```{r}
+# Data 
+## Preparation
+```{r preparation}
 # clean the memory
 rm(list = ls(all = TRUE)) 
 
@@ -38,6 +40,15 @@ sum(is.na(df))
 sapply(df, is.numeric)
 
 ```
+
+
+## Exploration
+
+```{r exploration}
+create_report(mtcars)
+```
+
+
 
 ```{r}
 # scale the data
