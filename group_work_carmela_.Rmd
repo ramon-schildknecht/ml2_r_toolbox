@@ -1,6 +1,8 @@
 ---
 title: "group_work"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
 
@@ -225,3 +227,111 @@ plot(tsne$Y, col=data_label)
 str(tsne)
 ```
 
+
+# Prinicpal Component Analysis (PCA)
+
+## Caluclate PCA and Show Metrics
+
+**Available metrics in the returend PCA object**  
+
+* **sdev:**  standard deviation of the principal components
+* **rotation:** rotation matrix shows the principal components of the loadings (variables). 
+* **center:** mean of each variable before scaling and computing PCA
+* **scale:** applied scale
+* **x:** x matrix shows the principal components of the scores (of the observation)
+
+```{r}
+
+# Compute PCA.
+# scale=TRUE to scale the variables to have standard deviation = 1
+pca_out = prcomp(df, scale=TRUE)
+
+# Show available metrics computed by PCA: 
+names(pca_out)
+
+# Access metrics computed by PCA
+pca_out$sdev    # show sdev
+pca_out$center  # show mean
+pca_out$scale   # show scale
+
+# Rotation matrix provides the principal component of the loadings.
+dim(pca_out$rotation) # p*p matrix whereas p is the number of variables (loadings)
+pca_out$rotation
+
+# x matrix provides the principal component of the scores.
+dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is the number of principal componentes
+# pca_out$x # not executed due to size of the matrix
+```
+
+## Create Biplot
+
+**Interpretation: **
+  
+* The features quality and aclcohol are similar
+* free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
+* fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
+```{r}
+
+# Create Biplot 
+# scale=0 ensures that the arrows are scaled to represent the loadings; 
+# other values for scale give slightly different biplots with different interpretations.
+biplot(pca_out,scale=0)
+
+
+# Create Biplot with reduced sample to get a better overview
+
+# Sample Data
+set.seed(2)
+sample_1=sample(1:nrow(df), nrow(df)/3) # sample a third of the data for training data
+df_reduced=df[sample_1,]
+
+# Calculate PCA on reduced dataset
+pca_out_reduced = prcomp(df_reduced, scale=TRUE)
+
+# Create Biplot on reduced dataset
+biplot(pca_out_reduced,scale=0)
+
+```
+
+## Interpretation of Biplot
+```{r}
+plot(df$quality,df$alcohol)
+plot(df$fixed.acidity,df$pH)
+plot(df$quality,df$total.sulfur.dioxide)
+plot(df$chlorides,df$density)
+
+```
+
+
+## Show variance explained by certain Principal Components
+
+**summary() on a prcomp object**
+Summary shows the standard deviation, proportion of variance and cumulative proportion of variance of each principal component
+  
+**Result:** 6 Principal Components explain more than 80% of the variance in the data.
+```{r}
+# screeplot shows the variance of each prinicipal component
+screeplot(pca_out)
+
+# Alternative:
+# It's more usueful to have the proportion (%) of variance of each principal component
+
+# Numeric values about proportion of variance can be retrieved with the summary function
+summary(pca_out)
+
+# Compute the proportion of variance explained by each principal component 
+# Calculation: variance explained by each principal component / total variance explained by all principal components)
+
+# Calculate variance of prinicipal components
+pca_out_var <- pca_out$sdev^2
+
+# calculate proportion of variance for each principal component
+pve <- pca_out_var/sum(pca_out_var)
+pve
+
+# plots
+plot(pve, main="Proporation of Variance per PC",xlab="Principal Component",ylab="Proportion of Variance Explained",ylim=c(0,1),type='b')
+plot(cumsum(pve),main="Cumulative Proporation of Variance per PC",xlab="PrincipalComponent",ylab="Cumulative Proportion of Variance
+Explained",ylim=c(0,1),type='b')
+
+```
