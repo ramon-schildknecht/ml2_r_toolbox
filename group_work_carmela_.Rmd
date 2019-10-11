@@ -334,4 +334,5 @@ plot(pve, main="Proporation of Variance per PC",xlab="Principal Component",ylab=
 plot(cumsum(pve),main="Cumulative Proporation of Variance per PC",xlab="PrincipalComponent",ylab="Cumulative Proportion of Variance
 Explained",ylim=c(0,1),type='b')
 
+
 ```
