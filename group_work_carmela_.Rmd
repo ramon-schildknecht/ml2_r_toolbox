@@ -63,6 +63,9 @@ create_report(df)  # not working @Ramon, works @Lars
 
 
 
+
+# k-Means-Clustering
+
 ```{r}
 # scale the data
 df_scaled <- scale(df)
@@ -107,6 +110,10 @@ Second plot: With increasing number of clusters the total within cluster sum of 
 
 Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be enjoyed with caution.
 
+
+
+
+# Hierarchical Clustering
 
 
 ```{r}
@@ -205,7 +212,13 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 ```
 Second plot: 
 
-#TSNE
+
+
+
+
+
+
+# TSNE
 ```{r}
 library(Rtsne)
 # datapoint later in the plot: data_label<-as.factor(rownames(data))
@@ -226,6 +239,9 @@ plot(tsne$Y, col=data_label)
 
 str(tsne)
 ```
+
+
+
 
 
 # Prinicpal Component Analysis (PCA)
@@ -293,6 +309,7 @@ biplot(pca_out_reduced,scale=0)
 
 ```
 
+
 ## Interpretation of Biplot
 ```{r}
 plot(df$quality,df$alcohol)
@@ -336,3 +353,42 @@ Explained",ylim=c(0,1),type='b')
 
 
 ```
+
+
+
+
+
+# Self-Organizing Maps (SOMs)
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
