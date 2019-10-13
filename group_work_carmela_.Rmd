@@ -220,6 +220,17 @@ Second plot:
 
 
 # TSNE
+## Caluclate TSNE and Show Metrics
+
+**Available metrics in the returend TSNE object**  
+
+https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
+
+* **dims:**  the number of dimensions the data should be reduced to
+* **perplexity:** it can be interpreted as a smooth measure of the effective number of neighbours (usuallly between 5 and 50) 
+* **max_iter:** Maximum iterations
+* **Theta:** speed/accuracy trade-off,increase for speed but less accuracy (default 0.5)
+
 ```{r}
 library(Rtsne)
 # datapoint later in the plot: data_label<-as.factor(rownames(data))
@@ -231,17 +242,27 @@ tsne <- Rtsne(df_scaled[!duplicated(df_scaled), ], dims = 2,
             perplexity=30, verbose=TRUE,
             max_iter = 500)
 
-# Use table row names to label the
-# datapoint later in the plot: 
-data_label<-as.factor(colnames(df_scaled))
+```
+
+```{r}
+#Create a function to generate a continuous color palette
+rbPal <- colorRampPalette(c('red','blue'))
+
+#This adds a column of color values
+# based on the y values
+df_scaled$Col <- rbPal(4)[as.numeric(cut(df$pH,breaks = 4))]
 
 # Plot data and labels:
-plot(tsne$Y, col=data_label)
+plot(tsne$Y, col=df_scaled$Col)
 
 str(tsne)
 ```
 
+**Interpretation: **
 
+* The features quality and aclcohol are similar
+* free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
+* fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
 
 
 
@@ -432,7 +453,7 @@ plot(som_model, type = "codes")
 plot(som_model,
      type = "property",
      property = getCodes(som_model, 1)[, 2])
-# → Make a loop over all the variables ?
+# ??? Make a loop over all the variables ?
 # Same as above but with original, unscaled data (can also be useful)
 var_unscaled <- aggregate(
   as.numeric(df_unique[, 1]),
