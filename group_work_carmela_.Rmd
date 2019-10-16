@@ -51,6 +51,10 @@ sum(is.na(df))
 # check if the columns are numeric
 sapply(df, is.numeric)
 
+# scale the data
+df_scaled <- scale(df)
+df_scaled
+
 ```
 
 
@@ -59,7 +63,7 @@ sapply(df, is.numeric)
 ```{r exploration}
 glimpse(df)
 # View(df)
-create_report(df)  # not working @Ramon, works @Lars
+create_report(df)  # not working @Ramon, works @Lars & @Carmela
 ```
 
 
@@ -67,18 +71,20 @@ create_report(df)  # not working @Ramon, works @Lars
 
 # k-Means-Clustering
 
-```{r}
-# scale the data
-df_scaled <- scale(df)
-df_scaled
+## Caluclate k-means-clustering and Show Metrics
 
-```
-```{r}
-### Methode 1: K-Means-Clustering
+**Available metrics in the returend k-Means object**  
 
-# Scale data
-df_scaled <- scale(df)
-df_scaled
+* **withinss:**  Vector of within-cluster sum of squares, one component per cluster.
+* **tot.withinss:** Total within-cluster sum of squares, i.e. sum(withinss). 
+* **size:** The number of points in each cluster.
+* **totss:** The total sum of squares.
+* **centers:** A matrix of cluster centres.
+* **cluster:** A vector of integers (from 1:k) indicating the cluster to which each point is allocated
+* **betweenss:** The between-cluster sum of squares, i.e. totss-tot.withinss.
+* **iter:** The number of (outer) iterations.
+* **ifault:** integer: indicator of a possible algorithm problem – for experts.
+```{r}
 
 # Run K-means
 km.out <- kmeans(df_scaled, 2,nstart =50)
@@ -105,24 +111,30 @@ for (i in 1:number_of_clusters_tested){
 plot(1:number_of_clusters_tested, wss, type="b", xlab="Number of Clusters",ylab="Total within-cluster sum of squares")
 plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",ylab="Difference between Total within-cluster sum of squares")
 ```
-First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with two dimensions.
+First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
 
-Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
 
-Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be enjoyed with caution.
-
-
+Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
 
 
-# Hierarchical Clustering
 
+
+# Hierarchical Clustering (HC)
+
+## Caluclate Hierarchical Clustering and Show Metrics
+
+**Available metrics in the returend HC object**  
+
+* **labels:** labels for each of the objects being clustered.
+* **method:** the cluster method that has been used.
+* **dist.method:** the distance that has been used to create d (only returned if the distance object has a "method" attribute).
+* **call:** the call which produced the result.
+* **order:** a vector giving the permutation of the original observations suitable for plotting, in the sense that a cluster plot using this ordering and matrix merge will not have crossings of the branches.
+* **height:** a set of n-1 real values (non-decreasing for ultrametric trees). The clustering height: that is, the value of the criterion associated with the clustering method for the particular agglomeration.
+* **merge:** an n-1 by 2 matrix. Row i of merge describes the merging of clusters at step i of the clustering. If an element j in the row is negative, then observation -j was merged at this stage. If j is positive then the merge was with the cluster formed at the (earlier) stage j of the algorithm. Thus negative entries in merge indicate agglomerations of singletons, and positive entries indicate agglomerations of non-singletons.
 
 ```{r}
-### Methode 2: Hierarchical Clustering
-
-# Scale data
-df_scaled <- scale(df)
-df_scaled
 
 # Calculate distances between data (default method = euclidean):
 distances <- dist(df_scaled, method = "euclidean")
@@ -141,7 +153,7 @@ str(dend)
 
 
 
-## Transpose data:
+# Transpose data:
 df_transposed <- t(df_scaled)
 
 # Calculate distances between data (default method = euclidean):
@@ -162,7 +174,7 @@ str(dend_t)
 
 
 
-## Use a specific linkage or distance methode in hc clustering
+# Use a specific linkage or distance methode in hc clustering
 
 # Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
 # Possible distance methods: "euclidean", "maximum", "manhattan","canberra","binary", "minkowski"
@@ -189,12 +201,6 @@ plot(res.hc)
 
 
 
-### Methode 3: Heatmap
-
-# Scale data
-df_scaled <- scale(df)
-df_scaled
-
 # Create heatmap
 heatmap(df_scaled)
 
@@ -204,17 +210,19 @@ heatmap(df_scaled)
 palette <- colorRampPalette(brewer.pal(9, "YlGnBu"))
 
 # Row- and column-wise clustering, with wished linkage and distance method:
-hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward")
+hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward.D2")
 hc2 <- hclust(as.dist(1-cor(df_scaled, method="spearman")), method="single")
 
 # Plot heatmap
 heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palette,scale="row", density.info="none", trace="none")
 
 ```
-Second plot: 
+Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
+
+Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
 
 
-
+Heatmaps: 
 
 
 
