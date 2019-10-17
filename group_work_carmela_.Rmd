@@ -7,7 +7,13 @@ output:
 Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
 
 # Setup
-## Install packages
+## Preparation
+
+Install package checkpoint prior to running to following code in your shell:
+- install.packages(checkpoint)
+- checkpoint("2019-09-20")
+
+## Load packages
 
 ```{r install_packages, message=FALSE, warning=FALSE}
 library(corrplot)
@@ -24,16 +30,19 @@ library(rmarkdown)
 library(DataExplorer)
 library(tidyverse)
 library(kohonen)
-# library(checkpoint)  # not working properly @Ramon
+library(checkpoint)
 ```
 
 
 ## Set checkpoint
 
 ```{r set checkpoint, message=FALSE, warning=FALSE}
-# checkpoint("2019-09-20")  # not working properly @Ramon
+checkpoint("2019-09-20")  # not working properly @Ramon
+# checkpointRemove("2019-09-20")
 ```
 
+# Method selection
+One can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
 
 
 # Data 
