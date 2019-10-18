@@ -554,3 +554,12 @@ add.cluster.boundaries(som_model, som_cluster)
 ```
 
 todo: Interpretation: to be defined
+
+Tipps vom Dozent:
+
+- Hyperparameter tuning: try & error 
+- Codes plot zeigt Wichtigkeit der Features pro Neuron 
+- Mapping plot zeigt logische Cluster, kann mehrere "Labels/Klassen" enthalten 
+- Praxisbeispiel sollte in Folien enthalten sein 
+
+
