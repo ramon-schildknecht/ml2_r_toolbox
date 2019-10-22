@@ -48,8 +48,9 @@ library(checkpoint)
 ## Set checkpoint
 
 ```{r set checkpoint, message=FALSE, warning=FALSE}
-checkpoint("2019-09-20")  # not working properly @Ramon, check with Tanadini
-# checkpointRemove("2019-09-20")
+checkpoint("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")  # not working properly @Ramon, check with Tanadini
+# checkpointRemove("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")
+checkpointRemove("2019-09-20")
 getOption("repos")
 .libPaths()
 ```
