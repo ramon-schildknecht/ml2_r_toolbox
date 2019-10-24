@@ -1,8 +1,8 @@
 ---
 title: "group_work"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 # Overview
@@ -36,6 +36,7 @@ library(stringr)
 library(dplyr)
 library(dendextend)
 library(ape)
+# RColorBrewer is used to show different shades of colours
 library(RColorBrewer)
 library(rmarkdown)
 library(DataExplorer)
