@@ -27,6 +27,8 @@ Install package checkpoint prior to running to following code in your shell:
 ## Load packages
 
 ```{r install_packages, message=FALSE, warning=FALSE}
+# library for TSNE
+library(Rtsne)
 library(corrplot)
 library(gplots)
 library(kohonen)
@@ -270,37 +272,45 @@ https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 * **Theta:** speed/accuracy trade-off,increase for speed but less accuracy (default 0.5)
 
 ```{r}
-library(Rtsne)
+
+df_scaled_df <- as.data.frame(df_scaled)
+
 # datapoint later in the plot: data_label<-as.factor(rownames(data))
 # Run tSNE:
 
 # we need to remove duplicates
 
-tsne <- Rtsne(df_scaled[!duplicated(df_scaled), ], dims = 2,
-            perplexity=30, verbose=TRUE,
+tsne <- Rtsne(df_scaled_df[!duplicated(df_scaled_df), ], dims = 2,
+            perplexity=50, verbose=TRUE,
             max_iter = 500)
 
 ```
 
 ```{r}
+## 1 ## This first section concerning colouring allows us to colour scaled numeric columns
 #Create a function to generate a continuous color palette
-rbPal <- colorRampPalette(c('red','blue'))
+rbPal <- colorRampPalette(c('red','yellow'))
 
 #This adds a column of color values
 # based on the y values
-df_scaled$Col <- rbPal(4)[as.numeric(cut(df$pH,breaks = 4))]
+df_scaled_df$Col_qual <- rbPal(10)[as.numeric(cut(df_scaled_df$quality,breaks = 10))]
+df_scaled_df$Col_ph <- rbPal(10)[as.numeric(cut((df_scaled_df$ph),breaks = 10))]
 
+## 2 ## We can choose colouring to be df_scaled_df$Col or e.g. df$quality
 # Plot data and labels:
-plot(tsne$Y, col=df_scaled$Col)
+plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "TSNE coloured by quality")
+plot(tsne$Y, col=df_scaled_df$Col, pch=16, main = "TSNE coloured by ph")
+#legend("topleft", legend=levels(df$quality), pch=16, col=unique(df$quality))
 
 str(tsne)
 ```
 
+
 **Interpretation: **
 
-* The features quality and aclcohol are similar
-* free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
-* fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
+* Could not find any meaningful patterns
+* I tried visually colouring the plotted datapoints by pH,citric.acid and quality
+* The visual categorisation does not seem to work for these values
 
 
 
