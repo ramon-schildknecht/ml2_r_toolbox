@@ -28,15 +28,15 @@ Install package checkpoint prior to running to following code in your shell:
 
 ```{r install_packages, message=FALSE, warning=FALSE}
 library(corrplot)
-library(gplots)
+library(gplots) # for making own color code (e.g. for heatmap representation)
 library(kohonen)
 library(plot3D)
-library(factoextra)
+library(factoextra) # more complexe library than standard R library; all methods for distance & linkage available
 library(stringr)
 library(dplyr)
 library(dendextend)
 library(ape)
-library(RColorBrewer)
+library(RColorBrewer) # for making own color code (e.g. for heatmap representation)
 library(rmarkdown)
 library(DataExplorer)
 library(tidyverse)  # SOM
@@ -112,8 +112,9 @@ create_report(df)  # not working @Ramon, works @Lars & @Carmela
 * **ifault:** integer: indicator of a possible algorithm problem – for experts.
 ```{r}
 
-# Run K-means
-km.out <- kmeans(df_scaled, 2,nstart =50)
+# Run K-means for k=2
+k <- 2 #defining two clusters
+km.out <- kmeans(df_scaled, k,nstart =50)
 plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
 
 # Check the outcome
@@ -138,11 +139,13 @@ plot(1:number_of_clusters_tested, wss, type="b", xlab="Number of Clusters",ylab=
 plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",ylab="Difference between Total within-cluster sum of squares")
 ```
 
-First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
+**Interpretation: **
 
-Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+*First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
 
-Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
+*Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+
+*Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
 
 
 
@@ -200,15 +203,17 @@ str(dend_t)
 
 
 
-
 # Use a specific linkage or distance methode in hc clustering
 
-# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
+# Find more information about distances and which one to choose: https://www.datanovia.com/en/lessons/clustering-distance-measures/
 # Possible distance methods: "euclidean", "maximum", "manhattan","canberra","binary", "minkowski"
 
+# Find more information about linkage method and which one to choose: https://www.datanovia.com/en/lessons/agglomerative-hierarchical-clustering/#linkage
+# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
+
+# Compute hierarchical clustering with euclidean distance and complete method:
 hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
 plot(hc)
-
 
 # Missing correlation-based methods (spearman, kendall): using library(factoextra) for these methods
 # Compute the dissimilarity matrix with different distance types: "euclidean", "manhattan", "pearson", "spearman", "kendall"
@@ -224,11 +229,11 @@ res.hc <- hclust(res.dist, method = "ward")
 fviz_dend(res.hc)
 
 # Or simply
-plot(res.hc)
+plot(res.hc, main = "HC with ward linkage type")
 
 
 
-# Create heatmap
+# Create heatmap with scaled data
 heatmap(df_scaled)
 
 # Make your own color code brewer.pal(n, name)
@@ -236,21 +241,24 @@ heatmap(df_scaled)
 # name Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
 palette <- colorRampPalette(brewer.pal(9, "YlGnBu"))
 
-# Row- and column-wise clustering, with wished linkage and distance method:
+# Row- and column-wise clustering, with wished linkage and distance method; hc1 with regular data and hc2 with transposed data:
 hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward.D2")
 hc2 <- hclust(as.dist(1-cor(df_scaled, method="spearman")), method="single")
 
-# Plot heatmap
+# Plot heatmap: Heatmap.2 (included in the Gplots Library) allows to define linkage & distance methods for heatmap representaton
 heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palette,scale="row", density.info="none", trace="none")
 
 ```
 
-Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
+**Interpretation: **
 
-Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
+*Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
 
+*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
 
-Heatmaps: tbd
+*Dissimilarity Matrix: tbd
+
+*Heatmaps: tbd
 
 
 
