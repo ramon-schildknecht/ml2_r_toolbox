@@ -48,11 +48,12 @@ library(checkpoint)
 
 ## Set checkpoint
 
-```{r set checkpoint, message=FALSE, warning=FALSE}
-checkpoint("2019-09-20")  # not working properly @Ramon, check with Tanadini
-# checkpointRemove("2019-09-20")
-getOption("repos")
-.libPaths()
+
+```{r set checkpoint, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+# ignore for the moment
+# checkpoint("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")  # not working properly @Ramon, check with Tanadini
+# checkpointRemove("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")
+# .libPaths()
 ```
 
 # Method selection
@@ -442,6 +443,13 @@ data_train_matrix <- as.matrix(scale(data))
 
 Removed wine quality label and transformed to scaled matrix which serves as input for the SOM model.
 
+General tipps regarding usage of SOMs:
+
+- Hyperparameter tuning: try & error 
+- Codes plot shows feature importance per neuron  
+- Mapping plot shows logical cluster which could contain several labels/classes  
+
+
 ```{r}
 # set up model
 set.seed(22)  # for reproducible results
@@ -463,13 +471,15 @@ som_grid <- somgrid(xdim = 4, ydim = 4,
                     topo = "hexagonal")
 
 # Train the model
-som_model <- som(
+som_model <- ?som(
   data_train_matrix,
   grid = som_grid,
   rlen = 1000,  # number of iterations
   alpha = c(0.05, 0.01),  # learning rate
   keep.data = TRUE
 )
+
+summary(som_model)
 
 ### !!! continue here !!! ###
 
@@ -494,7 +504,18 @@ plot(  # show sample of datapoints, wine quality and number of row
 
 ```
 
-todo: Interpretation: to be defined
+## Results interpretation I/II
+
+Model description:
+SOM of size 4x4 with a hexagonal topology and a bubble neighbourhood function.
+The number of data layers is 1.
+Distance measure(s) used: sumofsquares.
+Training data included: 1359 objects.
+Mean distance to the closest unit in the map: 4.076.
+
+The Counts and Mapping plot show two cluster of neurons: One with a lot of data points (n > 75) and the other with few data points (n <= 75) 
+
+
 
 ```{r}
 # U-Matrix: measure of distance between each node and its neighbours.
@@ -554,7 +575,11 @@ plot(
 add.cluster.boundaries(som_model, som_cluster)
 ```
 
-todo: Interpretation: to be defined
+## Results interpretation II/II
+
+The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive is the feature. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is useless this way. [continue here with mapping plot]
+ 
+
 
 Tipps vom Dozent:
 
@@ -562,5 +587,6 @@ Tipps vom Dozent:
 - Codes plot zeigt Wichtigkeit der Features pro Neuron 
 - Mapping plot zeigt logische Cluster, kann mehrere "Labels/Klassen" enthalten 
 - Praxisbeispiel sollte in Folien enthalten sein 
+
 
 
