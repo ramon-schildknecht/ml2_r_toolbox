@@ -291,7 +291,7 @@ dims <- "tbd"
 ```
 
 ```{r}
-
+# the dateframe needed to be re-defined as dataframe for the code to work properly
 df_scaled_df <- as.data.frame(df_scaled)
 
 # datapoint later in the plot: data_label<-as.factor(rownames(data))
