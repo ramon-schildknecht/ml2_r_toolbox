@@ -42,6 +42,7 @@ library(DataExplorer)
 library(tidyverse)  # SOM
 library(kohonen)  # SOM
 library(checkpoint)
+
 ```
 
 
