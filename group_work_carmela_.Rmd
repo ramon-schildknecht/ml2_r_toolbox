@@ -1,8 +1,8 @@
 ---
 title: "group_work"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 # Overview
@@ -29,7 +29,6 @@ Install package checkpoint prior to running to following code in your shell:
 ```{r install_packages, message=FALSE, warning=FALSE}
 library(corrplot)
 library(gplots)
-library(kohonen)
 library(plot3D)
 library(factoextra)
 library(stringr)
@@ -41,20 +40,9 @@ library(rmarkdown)
 library(DataExplorer)
 library(tidyverse)  # SOM
 library(kohonen)  # SOM
-library(checkpoint)
-
 ```
 
 
-## Set checkpoint
-
-
-```{r set checkpoint, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# ignore for the moment
-# checkpoint("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")  # not working properly @Ramon, check with Tanadini
-# checkpointRemove("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")
-# .libPaths()
-```
 
 # Method selection
 One can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
@@ -78,6 +66,8 @@ sapply(df, is.numeric)
 
 # scale the data
 df_scaled <- scale(df)
+class(df_scaled)  # is now a matrix
+
 as_tibble(df_scaled)
 
 ```
@@ -90,7 +80,7 @@ glimpse(df)
 # View(df)
 summary(df)
 
-create_report(df)  # not working @Ramon, works @Lars & @Carmela
+# create_report(df)  
 ```
 
 
@@ -120,7 +110,7 @@ plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", y
 # Check the outcome
 km.out
 km.out$withinss
-km.out$tot.withinss
+cat("withinss =", km.out$tot.withinss)
 
 # Find best value for k
 wss <- 0 # intialise
@@ -174,15 +164,16 @@ hc <- hclust(distances)
 dend <- as.dendrogram(hc)
 
 # Graphical representation
-plot(dend)
+plot(dend, main = "Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
-str(dend)
+# str(dend)  # computionally very expensive, takes about 2 minutes
 
 
 
 # Transpose data:
 df_transposed <- t(df_scaled)
+
 
 # Calculate distances between data (default method = euclidean):
 distances_t <- dist(df_transposed, method = "euclidean")
@@ -194,7 +185,7 @@ hc_t <- hclust(distances_t)
 dend_t <- as.dendrogram(hc_t)
 
 # Graphical representation
-plot(dend_t)
+plot(dend_t, main = "Transposed Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
 str(dend_t)
@@ -208,7 +199,7 @@ str(dend_t)
 # Possible distance methods: "euclidean", "maximum", "manhattan","canberra","binary", "minkowski"
 
 hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
-plot(hc)
+plot(hc, main = "Dendogram Plot with Euclidean distance, method complete")
 
 
 # Missing correlation-based methods (spearman, kendall): using library(factoextra) for these methods
@@ -267,6 +258,13 @@ https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 * **perplexity:** it can be interpreted as a smooth measure of the effective number of neighbours (usuallly between 5 and 50) 
 * **max_iter:** Maximum iterations
 * **Theta:** speed/accuracy trade-off,increase for speed but less accuracy (default 0.5)
+
+
+```{r}
+# define parameter
+dims <- "tbd"
+# ...
+```
 
 ```{r}
 library(Rtsne)
@@ -365,6 +363,7 @@ pca_out_reduced = prcomp(df_reduced, scale=TRUE)
 
 # Create Biplot on reduced dataset
 biplot(pca_out_reduced,scale=0)
+# create_report(df)
 
 ```
 
@@ -471,7 +470,7 @@ som_grid <- somgrid(xdim = 4, ydim = 4,
                     topo = "hexagonal")
 
 # Train the model
-som_model <- ?som(
+som_model <- som(
   data_train_matrix,
   grid = som_grid,
   rlen = 1000,  # number of iterations
