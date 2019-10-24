@@ -45,7 +45,6 @@ library(DataExplorer)
 library(tidyverse)  # SOM
 library(kohonen)  # SOM
 library(checkpoint)
-
 ```
 
 
@@ -292,15 +291,15 @@ tsne <- Rtsne(df_scaled_df[!duplicated(df_scaled_df), ], dims = 2,
 rbPal <- colorRampPalette(c('red','yellow'))
 
 #This adds a column of color values
-# based on the y values
-df_scaled_df$Col_qual <- rbPal(10)[as.numeric(cut(df_scaled_df$quality,breaks = 10))]
-df_scaled_df$Col_ph <- rbPal(10)[as.numeric(cut((df_scaled_df$ph),breaks = 10))]
+# creates 10 colour buckets based on quality
+df_scaled_df$Col_qual <- rbPal(8)[as.numeric(cut(df_scaled_df$quality,breaks = 10))]
+# creates 10 colour buckets based on ph
+df_scaled_df$Col_pH <- rbPal(7)[as.numeric(cut((df_scaled_df$pH),breaks = 10))]
 
 ## 2 ## We can choose colouring to be df_scaled_df$Col or e.g. df$quality
 # Plot data and labels:
 plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "TSNE coloured by quality")
-plot(tsne$Y, col=df_scaled_df$Col, pch=16, main = "TSNE coloured by ph")
-#legend("topleft", legend=levels(df$quality), pch=16, col=unique(df$quality))
+plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "TSNE coloured by pH")
 
 str(tsne)
 ```
