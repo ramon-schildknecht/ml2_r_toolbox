@@ -24,8 +24,9 @@ One could apply the following methods to the data.
 
 # Initial Situation
 We are a consulting company, which offers consulting around the topic Machine Learning. In the present order a wine dealer from South Africa engaged us to examine his collected data. The wine merchant sells the wine mainly to hotels, restaurants but also to private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
-Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 12 predictors are included. 
-Our task now is to form certain clusters in the available data, so that the wine dealer can differentiate his wines not only according to grape varieties, countries of origin and growing regions, but also according to other criteria.
+Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 11 predictors are included. We like to get insights especially for red wine. <br>
+
+Our task now is to form certain clusters in the available data, so that the wine dealer can differentiate his red wines not only according to grape varieties, countries of origin and growing regions, but also according to other criteria. <br> 
 One idea that he has expressed is that he can make an initial classification of the quality of the wine on the basis of the alcohol content or the pH value.
 
 
@@ -103,6 +104,28 @@ as_tibble(df_scaled)
 
 ## Exploration
 
+Description of the Variables
+
+*1. - 11.: Features*
+*12.: Label*
+
+1. fixed acidity: most acids involved with wine or fixed or nonvolatile (do not evaporate readily)
+2. volatile acidity: the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
+3. citric acid: found in small quantities, citric acid can add ‘freshness’ and flavor to wines
+4. residual sugar: the amount of sugar remaining after fermentation stops, it’s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
+5.chlorides: the amount of salt in the wine
+6. free sulfur dioxide: the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
+7. total sulfur dioxide: amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
+8. density: the density of water is close to that of water depending on the percent alcohol and sugar content
+9. pH: describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale
+10. sulphates: a wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant
+11. alcohol: the percent alcohol content of the wine
+12. quality (score between 0 and 10)
+
+Details about the dataset can be found [here](https://s3.amazonaws.com/udacity-hosted-downloads/ud651/wineQualityInfo.txt).
+
+<br>
+
 ```{r exploration}
 glimpse(df)
 # View(df)
@@ -113,22 +136,7 @@ summary(df)
 
 <br><br>
 
-
 # k-Means-Clustering
-
-# 
-
-One can use this Shiny widget to explore different variable settings combined with k number of clusters. 
-
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-options(shiny.deprecation.messages=FALSE)
-library(rmdexamples)
-kmeans_cluster(df)
-```
-
-We continue to do a proper analysis in the next section. 
-
-<br><br>
 
 ## Caluclate k-means-clustering and Show Metrics
 
@@ -313,12 +321,6 @@ https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 
 
 ```{r}
-# define parameter
-dims <- "tbd"
-# ...
-```
-
-```{r}
 # the dateframe needed to be re-defined as dataframe for the code to work properly
 df_scaled_df <- as.data.frame(df_scaled)
 
@@ -359,13 +361,13 @@ str(tsne)
 * The plots were coloured by pH and quality but could not establish clear relationships
 * The visual categorisation does not seem to be useful for this dataset
 
-### The tSNE could not find any meaningful groupings for the wines. 
+> The tSNE could not find any meaningful groupings for the wines. 
 
 
 
 # Prinicpal Component Analysis (PCA)
 
-## Caluclate PCA and Show Metrics
+## Calculate PCA and Show Metrics
 
 **Available metrics in the returend PCA object**  
 
@@ -405,6 +407,7 @@ dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is t
 * The features quality and aclcohol are similar
 * free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
 * fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
+
 ```{r}
 
 # Create Biplot 
@@ -477,10 +480,30 @@ Explained",ylim=c(0,1),type='b')
 
 
 
+
+<br><br>
+
+
 # Calculate Self-Organizing Maps (SOMs) and Show Metrics
 
 **Purpose: Data visualization of high-dimensional data.**
-How: Mapping from a higher-dimensional input space to a lower-dimensional map space with competitive learning. 
+How: Mapping from a higher-dimensional input space to a lower-dimensional map space with competitive learning. Neural network uses competetive learning. 
+
+**Available metrics in the returend PCA object**  
+
+* **unit.classif:** winning units for all data objects
+* **distances:** distances of objects to their corresponding winning unit 
+* **grid:** number of neurons in grid (two dimensional map)
+* **rlen:** Number of iterations, the number of times the complete data set will be presented to the network
+* **alpha:** Learning rate, a vector of two numbers indicating the amount of change. Default is to decline linearly from 0.05 to 0.01 over rlen updates 
+
+*More metrics can be found with ?som.*
+
+**Central Caveats:**
+
+- Influence/choice of parameters not very clear 
+- Not building generative model (not “understanding” the data, cannot reproduce similar ones) mapping 
+
 
 ```{r}
 # preprocess data for model
@@ -504,7 +527,7 @@ data_train_matrix <- as.matrix(scale(data))
 
 Removed wine quality label and transformed to scaled matrix which serves as input for the SOM model.
 
-General tipps regarding usage of SOMs:
+General tipps and hints regarding usage of SOMs:
 
 - Hyperparameter tuning: try & error 
 - Codes plot shows feature importance per neuron  
@@ -535,14 +558,12 @@ som_grid <- somgrid(xdim = 4, ydim = 4,
 som_model <- som(
   data_train_matrix,
   grid = som_grid,
-  rlen = 1000,  # number of iterations
+  rlen = 1000,  # number of iterations, tried with 10'000 and 100'000 but with no significant better result. Always approches minimum after two third of the iterations
   alpha = c(0.05, 0.01),  # learning rate
   keep.data = TRUE
 )
 
 summary(som_model)
-
-### !!! continue here !!! ###
 
 # Check training progress
 options(scipen = 999)  # for better reading
@@ -565,7 +586,7 @@ plot(  # show sample of datapoints, wine quality and number of row
 
 ```
 
-## Results interpretation I/II
+## Results interpretation part one
 
 Model description:
 SOM of size 4x4 with a hexagonal topology and a bubble neighbourhood function.
@@ -636,17 +657,20 @@ plot(
 add.cluster.boundaries(som_model, som_cluster)
 ```
 
-## Results interpretation II/II
+## Final interpretation: what are possible wine clusters?
 
 The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive is the feature. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is useless this way. <br>
 
-The mapping plot indicates how many clusters are reasonable given the trained model. There could be several classes per cluster. One recognizes three reasonable clusters: 
+The mapping plot indicates how many clusters are reasonable given the trained model. There could be several classes per cluster. The wine dealer learns therefore three new possible clusters:  
 
-- The blue cluster shows 12.5% of all neurons. It contains data points with strong characteristics for citric acid and density. 
-- The green cluster shows 12.5% of all neurons as well. It contains data points with strong values for the variables in pH and alcohol.
-- The orange cluster contains 75% of all neurons. It contains the remaining data points with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates. 
+- The blue cluster shows 12.5% of all neurons. It contains low data points (see "Counts plot") with strong characteristics for citric acid and density (check "Codes plot"). This cluster contains wines with a lot of "freshness" and flavor. 
+- The green cluster shows 12.5% of all neurons as well. It contains low data points as well (see "Counts plot") with strong values for the variables in pH and alcohol (check "Codes plot"). These wines tend to are rather very basic and "palatable". 
+- The orange cluster contains 75% of all neurons. It contains the estimated more than 80% (check "Codes plot") of all data points with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (check "Codes plot"). These wines seem pretty sweet and salty at the same time. The sweetness should remain a long time thanks to the high sulphate values. 
 
-Of course expertise knowledge of the dataset is essential to derive valuable insights from the results.
+Of course expertise knowledge of the dataset and the wine domain is essential to derive valuable insights from the results. With the SOM results we will try campaign promoting "fresh & flavorable wine" as well as "Salty but long-lasting sweet wine". We are looking forward to delight many existing and new customers! 
+
+**outlook:** The wine dealer could wish to get more details about the single neurons within the three clusters. One could test more grid sizes respectively the number of neurons as input for the SOM and try to get even more insights.
+
 
 
 
