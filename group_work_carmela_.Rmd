@@ -1,7 +1,16 @@
 ---
 title: "group_work"
 output:
+<<<<<<< HEAD
   html_document: default
+=======
+  html_document:
+    df_print: paged
+    theme: united
+    toc: yes
+    number_sections: true
+    toc_float: true
+>>>>>>> 368d280f5140feea2308ab9992ec76609f1093bf
   pdf_document: default
 ---
 
@@ -27,34 +36,29 @@ Install package checkpoint prior to running to following code in your shell:
 ## Load packages
 
 ```{r install_packages, message=FALSE, warning=FALSE}
+# library for TSNE
+library(Rtsne)
 library(corrplot)
 library(gplots)
+library(gplots) # for making own color code (e.g. for heatmap representation)
 library(kohonen)
 library(plot3D)
-library(factoextra)
+library(factoextra) # more complexe library than standard R library; all methods for distance & linkage available
 library(stringr)
 library(dplyr)
 library(dendextend)
 library(ape)
+library(RColorBrewer) # for making own color code (e.g. for heatmap representation)
+# RColorBrewer is used to show different shades of colours
 library(RColorBrewer)
 library(rmarkdown)
 library(DataExplorer)
 library(tidyverse)  # SOM
 library(kohonen)  # SOM
 library(checkpoint)
-
 ```
 
 
-## Set checkpoint
-
-
-```{r set checkpoint, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# ignore for the moment
-# checkpoint("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")  # not working properly @Ramon, check with Tanadini
-# checkpointRemove("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")
-# .libPaths()
-```
 
 # Method selection
 One can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
@@ -78,6 +82,8 @@ sapply(df, is.numeric)
 
 # scale the data
 df_scaled <- scale(df)
+class(df_scaled)  # is now a matrix
+
 as_tibble(df_scaled)
 
 ```
@@ -90,7 +96,7 @@ glimpse(df)
 # View(df)
 summary(df)
 
-create_report(df)  # not working @Ramon, works @Lars & @Carmela
+# create_report(df)  
 ```
 
 
@@ -113,14 +119,15 @@ create_report(df)  # not working @Ramon, works @Lars & @Carmela
 * **ifault:** integer: indicator of a possible algorithm problem – for experts.
 ```{r}
 
-# Run K-means
-km.out <- kmeans(df_scaled, 2,nstart =50)
+# Run K-means for k=2
+k <- 2 #defining two clusters
+km.out <- kmeans(df_scaled, k,nstart =50)
 plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
 
 # Check the outcome
 km.out
 km.out$withinss
-km.out$tot.withinss
+cat("withinss =", km.out$tot.withinss)
 
 # Find best value for k
 wss <- 0 # intialise
@@ -139,11 +146,17 @@ plot(1:number_of_clusters_tested, wss, type="b", xlab="Number of Clusters",ylab=
 plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",ylab="Difference between Total within-cluster sum of squares")
 ```
 
-First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
+**Interpretation: **
 
-Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+*First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
 
-Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
+*Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+
+<<<<<<< HEAD
+*Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
+=======
+Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
+>>>>>>> c216d2ff096e9a59e112e6360fa65339d581f011
 
 
 
@@ -174,15 +187,16 @@ hc <- hclust(distances)
 dend <- as.dendrogram(hc)
 
 # Graphical representation
-plot(dend)
+plot(dend, main = "Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
-str(dend)
+# str(dend)  # computionally very expensive, takes about 2 minutes
 
 
 
 # Transpose data:
 df_transposed <- t(df_scaled)
+
 
 # Calculate distances between data (default method = euclidean):
 distances_t <- dist(df_transposed, method = "euclidean")
@@ -194,22 +208,24 @@ hc_t <- hclust(distances_t)
 dend_t <- as.dendrogram(hc_t)
 
 # Graphical representation
-plot(dend_t)
+plot(dend_t, main = "Transposed Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
 str(dend_t)
 
 
 
-
 # Use a specific linkage or distance methode in hc clustering
 
-# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
+# Find more information about distances and which one to choose: https://www.datanovia.com/en/lessons/clustering-distance-measures/
 # Possible distance methods: "euclidean", "maximum", "manhattan","canberra","binary", "minkowski"
 
-hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
-plot(hc)
+# Find more information about linkage method and which one to choose: https://www.datanovia.com/en/lessons/agglomerative-hierarchical-clustering/#linkage
+# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
 
+# Compute hierarchical clustering with euclidean distance and complete method:
+hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
+plot(hc, main = "Dendogram Plot with Euclidean distance, method complete")
 
 # Missing correlation-based methods (spearman, kendall): using library(factoextra) for these methods
 # Compute the dissimilarity matrix with different distance types: "euclidean", "manhattan", "pearson", "spearman", "kendall"
@@ -225,11 +241,11 @@ res.hc <- hclust(res.dist, method = "ward")
 fviz_dend(res.hc)
 
 # Or simply
-plot(res.hc)
+plot(res.hc, main = "HC with ward linkage type")
 
 
 
-# Create heatmap
+# Create heatmap with scaled data
 heatmap(df_scaled)
 
 # Make your own color code brewer.pal(n, name)
@@ -237,21 +253,24 @@ heatmap(df_scaled)
 # name Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
 palette <- colorRampPalette(brewer.pal(9, "YlGnBu"))
 
-# Row- and column-wise clustering, with wished linkage and distance method:
+# Row- and column-wise clustering, with wished linkage and distance method; hc1 with regular data and hc2 with transposed data:
 hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward.D2")
 hc2 <- hclust(as.dist(1-cor(df_scaled, method="spearman")), method="single")
 
-# Plot heatmap
+# Plot heatmap: Heatmap.2 (included in the Gplots Library) allows to define linkage & distance methods for heatmap representaton
 heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palette,scale="row", density.info="none", trace="none")
 
 ```
 
-Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
+**Interpretation: **
 
-Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
+*Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
 
+*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
 
-Heatmaps: tbd
+*Dissimilarity Matrix: tbd
+
+*Heatmaps: tbd
 
 
 
@@ -268,38 +287,53 @@ https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 * **max_iter:** Maximum iterations
 * **Theta:** speed/accuracy trade-off,increase for speed but less accuracy (default 0.5)
 
+
 ```{r}
-library(Rtsne)
+# define parameter
+dims <- "tbd"
+# ...
+```
+
+```{r}
+# the dateframe needed to be re-defined as dataframe for the code to work properly
+df_scaled_df <- as.data.frame(df_scaled)
+
 # datapoint later in the plot: data_label<-as.factor(rownames(data))
 # Run tSNE:
 
 # we need to remove duplicates
 
-tsne <- Rtsne(df_scaled[!duplicated(df_scaled), ], dims = 2,
-            perplexity=30, verbose=TRUE,
+tsne <- Rtsne(df_scaled_df[!duplicated(df_scaled_df), ], dims = 2,
+            perplexity=50, verbose=TRUE,
             max_iter = 500)
 
 ```
 
 ```{r}
+## 1 ## This first section concerning colouring allows us to colour scaled numeric columns
 #Create a function to generate a continuous color palette
-rbPal <- colorRampPalette(c('red','blue'))
+rbPal <- colorRampPalette(c('red','yellow'))
 
 #This adds a column of color values
-# based on the y values
-df_scaled$Col <- rbPal(4)[as.numeric(cut(df$pH,breaks = 4))]
+# creates 10 colour buckets based on quality
+df_scaled_df$Col_qual <- rbPal(8)[as.numeric(cut(df_scaled_df$quality,breaks = 10))]
+# creates 10 colour buckets based on ph
+df_scaled_df$Col_pH <- rbPal(7)[as.numeric(cut((df_scaled_df$pH),breaks = 10))]
 
+## 2 ## We can choose colouring to be df_scaled_df$Col or e.g. df$quality
 # Plot data and labels:
-plot(tsne$Y, col=df_scaled$Col)
+plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "TSNE coloured by quality")
+plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "TSNE coloured by pH")
 
 str(tsne)
 ```
 
+
 **Interpretation: **
 
-* The features quality and aclcohol are similar
-* free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
-* fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
+* Could not find any meaningful patterns
+* I tried visually colouring the plotted datapoints by pH,citric.acid and quality
+* The visual categorisation does not seem to work for these values
 
 
 
@@ -365,6 +399,7 @@ pca_out_reduced = prcomp(df_reduced, scale=TRUE)
 
 # Create Biplot on reduced dataset
 biplot(pca_out_reduced,scale=0)
+# create_report(df)
 
 ```
 
@@ -471,7 +506,7 @@ som_grid <- somgrid(xdim = 4, ydim = 4,
                     topo = "hexagonal")
 
 # Train the model
-som_model <- ?som(
+som_model <- som(
   data_train_matrix,
   grid = som_grid,
   rlen = 1000,  # number of iterations
