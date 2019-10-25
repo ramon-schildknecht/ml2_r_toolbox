@@ -1,38 +1,63 @@
 ---
 title: "group_work"
 output:
+  html_document:
+    df_print: paged
+    theme: united
+    toc: yes
+    number_sections: true
+    toc_float: true
   pdf_document: default
-  html_document: default
 ---
-Lecture 1: Kmeans clustering and Hierarchical Clustering (HC) & Heat Maps
+
+# Overview
+
+One could apply the following methods to the data. 
+
+- Kmeans clustering 
+- Hierarchical Clustering (HC) & Heat Maps 
+- t-Distributed Stochastic Neighbor Embedding (tSNE) 
+- Prinicpal Component Analysis (PCA) 
+- Self-Organizing Maps (SOM) 
+
+<br><br>
 
 # Setup
-## Install packages
+## Preparation
+
+Install package checkpoint prior to running to following code in your shell:
+- install.packages(checkpoint)
+- checkpoint("2019-09-20")
+
+## Load packages
 
 ```{r install_packages, message=FALSE, warning=FALSE}
+# library for TSNE
+library(Rtsne)
 library(corrplot)
 library(gplots)
+library(gplots) # for making own color code (e.g. for heatmap representation)
 library(kohonen)
 library(plot3D)
-library(factoextra)
+library(factoextra) # more complexe library than standard R library; all methods for distance & linkage available
 library(stringr)
 library(dplyr)
 library(dendextend)
 library(ape)
+library(RColorBrewer) # for making own color code (e.g. for heatmap representation)
+# RColorBrewer is used to show different shades of colours
 library(RColorBrewer)
 library(rmarkdown)
 library(DataExplorer)
-library(tidyverse)
-# library(checkpoint)  # not working properly @Ramon
+library(tidyverse)  # SOM
+library(kohonen)  # SOM
+library(checkpoint)
 ```
 
 
-## Set checkpoint
 
-```{r set checkpoint, message=FALSE, warning=FALSE}
-# checkpoint("2019-09-20")  # not working properly @Ramon
-```
-
+# Method selection
+One can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
 
 
 # Data 
@@ -44,11 +69,18 @@ rm(list = ls(all = TRUE))
 # load data
 df <- read.csv("winequality-red.csv")
 
+
 # count the missing values (NA) in the data frame
 sum(is.na(df))
 
 # check if the columns are numeric
 sapply(df, is.numeric)
+
+# scale the data
+df_scaled <- scale(df)
+class(df_scaled)  # is now a matrix
+
+as_tibble(df_scaled)
 
 ```
 
@@ -58,7 +90,9 @@ sapply(df, is.numeric)
 ```{r exploration}
 glimpse(df)
 # View(df)
-create_report(df)  # not working @Ramon, works @Lars
+summary(df)
+
+# create_report(df)  
 ```
 
 
@@ -66,27 +100,30 @@ create_report(df)  # not working @Ramon, works @Lars
 
 # k-Means-Clustering
 
+## Caluclate k-means-clustering and Show Metrics
+
+**Available metrics in the returend k-Means object**  
+
+* **withinss:**  Vector of within-cluster sum of squares, one component per cluster.
+* **tot.withinss:** Total within-cluster sum of squares, i.e. sum(withinss). 
+* **size:** The number of points in each cluster.
+* **totss:** The total sum of squares.
+* **centers:** A matrix of cluster centres.
+* **cluster:** A vector of integers (from 1:k) indicating the cluster to which each point is allocated
+* **betweenss:** The between-cluster sum of squares, i.e. totss-tot.withinss.
+* **iter:** The number of (outer) iterations.
+* **ifault:** integer: indicator of a possible algorithm problem – for experts.
 ```{r}
-# scale the data
-df_scaled <- scale(df)
-df_scaled
 
-```
-```{r}
-### Methode 1: K-Means-Clustering
-
-# Scale data
-df_scaled <- scale(df)
-df_scaled
-
-# Run K-means
-km.out <- kmeans(df_scaled, 2,nstart =50)
+# Run K-means for k=2
+k <- 2 #defining two clusters
+km.out <- kmeans(df_scaled, k,nstart =50)
 plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
 
 # Check the outcome
 km.out
 km.out$withinss
-km.out$tot.withinss
+cat("withinss =", km.out$tot.withinss)
 
 # Find best value for k
 wss <- 0 # intialise
@@ -104,24 +141,37 @@ for (i in 1:number_of_clusters_tested){
 plot(1:number_of_clusters_tested, wss, type="b", xlab="Number of Clusters",ylab="Total within-cluster sum of squares")
 plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",ylab="Difference between Total within-cluster sum of squares")
 ```
-First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with two dimensions.
 
-Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+**Interpretation: **
 
-Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be enjoyed with caution.
+*First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
+
+*Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+
+<<<<<<< HEAD
+*Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
+=======
+Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
+>>>>>>> c216d2ff096e9a59e112e6360fa65339d581f011
 
 
 
 
-# Hierarchical Clustering
+# Hierarchical Clustering (HC)
 
+## Caluclate Hierarchical Clustering and Show Metrics
+
+**Available metrics in the returend HC object**  
+
+* **labels:** labels for each of the objects being clustered.
+* **method:** the cluster method that has been used.
+* **dist.method:** the distance that has been used to create d (only returned if the distance object has a "method" attribute).
+* **call:** the call which produced the result.
+* **order:** a vector giving the permutation of the original observations suitable for plotting, in the sense that a cluster plot using this ordering and matrix merge will not have crossings of the branches.
+* **height:** a set of n-1 real values (non-decreasing for ultrametric trees). The clustering height: that is, the value of the criterion associated with the clustering method for the particular agglomeration.
+* **merge:** an n-1 by 2 matrix. Row i of merge describes the merging of clusters at step i of the clustering. If an element j in the row is negative, then observation -j was merged at this stage. If j is positive then the merge was with the cluster formed at the (earlier) stage j of the algorithm. Thus negative entries in merge indicate agglomerations of singletons, and positive entries indicate agglomerations of non-singletons.
 
 ```{r}
-### Methode 2: Hierarchical Clustering
-
-# Scale data
-df_scaled <- scale(df)
-df_scaled
 
 # Calculate distances between data (default method = euclidean):
 distances <- dist(df_scaled, method = "euclidean")
@@ -133,15 +183,16 @@ hc <- hclust(distances)
 dend <- as.dendrogram(hc)
 
 # Graphical representation
-plot(dend)
+plot(dend, main = "Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
-str(dend)
+# str(dend)  # computionally very expensive, takes about 2 minutes
 
 
 
-## Transpose data:
+# Transpose data:
 df_transposed <- t(df_scaled)
+
 
 # Calculate distances between data (default method = euclidean):
 distances_t <- dist(df_transposed, method = "euclidean")
@@ -153,22 +204,24 @@ hc_t <- hclust(distances_t)
 dend_t <- as.dendrogram(hc_t)
 
 # Graphical representation
-plot(dend_t)
+plot(dend_t, main = "Transposed Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
 str(dend_t)
 
 
 
+# Use a specific linkage or distance methode in hc clustering
 
-## Use a specific linkage or distance methode in hc clustering
-
-# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
+# Find more information about distances and which one to choose: https://www.datanovia.com/en/lessons/clustering-distance-measures/
 # Possible distance methods: "euclidean", "maximum", "manhattan","canberra","binary", "minkowski"
 
-hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
-plot(hc)
+# Find more information about linkage method and which one to choose: https://www.datanovia.com/en/lessons/agglomerative-hierarchical-clustering/#linkage
+# Possible linkage methods: "ward.D", "ward.D2", "single", "complete","average", "mcquitty", "median","centroid"
 
+# Compute hierarchical clustering with euclidean distance and complete method:
+hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
+plot(hc, main = "Dendogram Plot with Euclidean distance, method complete")
 
 # Missing correlation-based methods (spearman, kendall): using library(factoextra) for these methods
 # Compute the dissimilarity matrix with different distance types: "euclidean", "manhattan", "pearson", "spearman", "kendall"
@@ -184,17 +237,11 @@ res.hc <- hclust(res.dist, method = "ward")
 fviz_dend(res.hc)
 
 # Or simply
-plot(res.hc)
+plot(res.hc, main = "HC with ward linkage type")
 
 
 
-### Methode 3: Heatmap
-
-# Scale data
-df_scaled <- scale(df)
-df_scaled
-
-# Create heatmap
+# Create heatmap with scaled data
 heatmap(df_scaled)
 
 # Make your own color code brewer.pal(n, name)
@@ -202,45 +249,87 @@ heatmap(df_scaled)
 # name Blues BuGn BuPu GnBu Greens Greys Oranges OrRd PuBu PuBuGn PuRd Purples RdPu Reds YlGn YlGnBu YlOrBr YlOrRd
 palette <- colorRampPalette(brewer.pal(9, "YlGnBu"))
 
-# Row- and column-wise clustering, with wished linkage and distance method:
-hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward")
+# Row- and column-wise clustering, with wished linkage and distance method; hc1 with regular data and hc2 with transposed data:
+hc1 <- hclust(as.dist(1-cor(t(df_scaled), method="kendall")), method="ward.D2")
 hc2 <- hclust(as.dist(1-cor(df_scaled, method="spearman")), method="single")
 
-# Plot heatmap
+# Plot heatmap: Heatmap.2 (included in the Gplots Library) allows to define linkage & distance methods for heatmap representaton
 heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palette,scale="row", density.info="none", trace="none")
 
 ```
-Second plot: 
+
+**Interpretation: **
+
+*Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
+
+*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
+
+*Dissimilarity Matrix: tbd
+
+*Heatmaps: tbd
 
 
 
 
+# tSNE
+## Caluclate tSNE and Show Metrics
+
+**Available metrics in the returend TSNE object**  
+
+https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
+
+* **dims:**  the number of dimensions the data should be reduced to
+* **perplexity:** it can be interpreted as a smooth measure of the effective number of neighbours (usuallly between 5 and 50) 
+* **max_iter:** Maximum iterations
+* **Theta:** speed/accuracy trade-off,increase for speed but less accuracy (default 0.5)
 
 
-
-# TSNE
 ```{r}
-library(Rtsne)
+# define parameter
+dims <- "tbd"
+# ...
+```
+
+```{r}
+# the dateframe needed to be re-defined as dataframe for the code to work properly
+df_scaled_df <- as.data.frame(df_scaled)
+
 # datapoint later in the plot: data_label<-as.factor(rownames(data))
 # Run tSNE:
 
 # we need to remove duplicates
 
-tsne <- Rtsne(df_scaled[!duplicated(df_scaled), ], dims = 2,
-            perplexity=30, verbose=TRUE,
+tsne <- Rtsne(df_scaled_df[!duplicated(df_scaled_df), ], dims = 2,
+            perplexity=50, verbose=TRUE,
             max_iter = 500)
 
-# Use table row names to label the
-# datapoint later in the plot: 
-data_label<-as.factor(colnames(df_scaled))
+```
 
+```{r}
+## 1 ## This first section concerning colouring allows us to colour scaled numeric columns
+#Create a function to generate a continuous color palette
+rbPal <- colorRampPalette(c('red','yellow'))
+
+#This adds a column of color values
+# creates 10 colour buckets based on quality
+df_scaled_df$Col_qual <- rbPal(8)[as.numeric(cut(df_scaled_df$quality,breaks = 10))]
+# creates 10 colour buckets based on ph
+df_scaled_df$Col_pH <- rbPal(7)[as.numeric(cut((df_scaled_df$pH),breaks = 10))]
+
+## 2 ## We can choose colouring to be df_scaled_df$Col or e.g. df$quality
 # Plot data and labels:
-plot(tsne$Y, col=data_label)
+plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "TSNE coloured by quality")
+plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "TSNE coloured by pH")
 
 str(tsne)
 ```
 
 
+**Interpretation: **
+
+* Could not find any meaningful patterns
+* I tried visually colouring the plotted datapoints by pH,citric.acid and quality
+* The visual categorisation does not seem to work for these values
 
 
 
@@ -306,6 +395,7 @@ pca_out_reduced = prcomp(df_reduced, scale=TRUE)
 
 # Create Biplot on reduced dataset
 biplot(pca_out_reduced,scale=0)
+# create_report(df)
 
 ```
 
@@ -358,37 +448,177 @@ Explained",ylim=c(0,1),type='b')
 
 
 
-# Self-Organizing Maps (SOMs)
+# Calculate Self-Organizing Maps (SOMs) and Show Metrics
 
+**Purpose: Data visualization of high-dimensional data.**
+How: Mapping from a higher-dimensional input space to a lower-dimensional map space with competitive learning. 
 
 ```{r}
+# preprocess data for model
+df_unique <- unique(df)  # remove duplicates, here 200 data rows
+glimpse(df_unique)
+
+data <-
+  as.matrix(scale(df_unique[, 1:11]))  # scale: mean = 0, sd = 1
+
+# show feature names
+dimnames(data)[2]  # label successfully removed
+
+# For plotting evaluation against colorcode
+# category (~ classification solution)
+row_label <- as.factor(rownames(data))
+qualities <- as.character(df$quality)
+
+data_train_matrix <- as.matrix(scale(data))
 
 ```
 
+Removed wine quality label and transformed to scaled matrix which serves as input for the SOM model.
+
+General tipps regarding usage of SOMs:
+
+- Hyperparameter tuning: try & error 
+- Codes plot shows feature importance per neuron  
+- Mapping plot shows logical cluster which could contain several labels/classes  
+
+
+```{r}
+# set up model
+set.seed(22)  # for reproducible results
+
+# get heuristic number of neurons for the following grid
+# use this heuristic from Alexander Maier https://www.researchgate.net/post/How_many_nodes_for_self-organizing_maps
+
+neurons <- 5*sqrt(nrow(df))
+neuron_per_grid <- round(sqrt(neurons))
+
+# Define the neuronal grid
+som_grid <- somgrid(xdim = neuron_per_grid, ydim = neuron_per_grid,
+                    topo = "hexagonal")
+
+# this grid is not really usable because the interpretation is not really possible, so one would choose a really low level for the neurons
+
+# Redefine the neuronal grid
+som_grid <- somgrid(xdim = 4, ydim = 4,
+                    topo = "hexagonal")
+
+# Train the model
+som_model <- som(
+  data_train_matrix,
+  grid = som_grid,
+  rlen = 1000,  # number of iterations
+  alpha = c(0.05, 0.01),  # learning rate
+  keep.data = TRUE
+)
+
+summary(som_model)
+
+### !!! continue here !!! ###
+
+# Check training progress
+options(scipen = 999)  # for better reading
+plot(som_model, type = "changes")
+# Check how many samples are mapped to each
+# node on the map. (5-10 samples per node)
+
+# Explore training results
+plot(som_model, type = "count")  # how many datapoints are in a neuron
+plot(som_model, type = "mapping",  # show datapoints per neuron, 5 - 10 datapoints 
+     col = qualities[row_label])      # per neuron is the target range
+# one color per wine quality
+
+plot(  # show sample of datapoints, wine quality and number of row
+  som_model,
+  type = "mapping",
+  labels = (rownames(data)),
+  col = qualities[row_label]
+)
+
+```
+
+## Results interpretation I/II
+
+Model description:
+SOM of size 4x4 with a hexagonal topology and a bubble neighbourhood function.
+The number of data layers is 1.
+Distance measure(s) used: sumofsquares.
+Training data included: 1359 objects.
+Mean distance to the closest unit in the map: 4.076.
+
+The Counts and Mapping plot show two cluster of neurons: One with a lot of data points (n > 75) and the other with few data points (n <= 75) 
 
 
 
+```{r}
+# U-Matrix: measure of distance between each node and its neighbours.
+# (Euclidean distance between weight vectors of neighboring neurons)
+# Can be used to identify clusters/boundaries within the SOM map.
+# Areas of low neighbour distance ~ groups of nodes that are similar.
+plot(som_model, type = "dist.neighbours")
+
+# Codes / Weight vectors: representative of the samples mapped to a node.
+# highlights patterns in the distribution of samples and variables.
+plot(som_model, type = "codes")
+
+# Heatmaps: identify interesting areas on the map.
+# Visualise the distribution of a single variable (defined in [,x]) across the map
+plot(som_model,
+     type = "property",
+     property = getCodes(som_model, 1)[, 2])
+
+# Same as above but with original, unscaled data (can also be useful)
+var_unscaled <- aggregate(
+  as.numeric(df_unique[, 1]),
+  by = list(som_model$unit.classif),
+  FUN = mean,
+  simplify = TRUE
+)[, 2]
+plot(som_model, type = "property", property = var_unscaled)
+
+# Clustering: isolate groups of samples with similar metrics
+tree <-
+  as.dendrogram(hclust(dist(as.numeric(
+    unlist(som_model$codes)
+  ))))
+plot(tree, ylab = "Height (h)")
+
+# Cut the tree somewhere based on the above tree
+som_cluster <-
+  cutree(hclust(dist(as.numeric(
+    unlist(som_model$codes)
+  ))),
+  h = 2) # k groups or at h hight
+
+# Visualize mapping based on HC
+pretty_palette <- c("#1f77b4",
+                    '#ff7f0e',
+                    '#2ca02c',
+                    '#d62728',
+                    '#9467bd',
+                    '#8c564b',
+                    '#e377c2')
+plot(
+  som_model,
+  type = "mapping",
+  labels = (rownames(data)),
+  bgcol = pretty_palette[som_cluster],
+  col = qualities[row_label]
+)
+add.cluster.boundaries(som_model, som_cluster)
+```
+
+## Results interpretation II/II
+
+The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive is the feature. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is useless this way. [continue here with mapping plot]
+ 
 
 
+Tipps vom Dozent:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Hyperparameter tuning: try & error 
+- Codes plot zeigt Wichtigkeit der Features pro Neuron 
+- Mapping plot zeigt logische Cluster, kann mehrere "Labels/Klassen" enthalten 
+- Praxisbeispiel sollte in Folien enthalten sein 
 
 
 
