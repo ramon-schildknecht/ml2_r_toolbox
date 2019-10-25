@@ -616,16 +616,15 @@ add.cluster.boundaries(som_model, som_cluster)
 
 ## Results interpretation II/II
 
-The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive is the feature. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is useless this way. [continue here with mapping plot]
- 
+The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive is the feature. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is useless this way. <br>
 
+The mapping plot indicates how many clusters are reasonable given the trained model. There could be several classes per cluster. One recognizes three reasonable clusters: 
 
-Tipps vom Dozent:
+- The blue cluster shows 12.5% of all neurons. It contains data points with strong characteristics for citric acid and density. 
+- The green cluster shows 12.5% of all neurons as well. It contains data points with strong values for the variables in pH and alcohol.
+- The orange cluster contains 75% of all neurons. It contains the remaining data points with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates. 
 
-- Hyperparameter tuning: try & error 
-- Codes plot zeigt Wichtigkeit der Features pro Neuron 
-- Mapping plot zeigt logische Cluster, kann mehrere "Labels/Klassen" enthalten 
-- Praxisbeispiel sollte in Folien enthalten sein 
+Of course expertise knowledge of the dataset is essential to derive valuable insights from the results.
 
 
 
