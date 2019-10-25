@@ -293,6 +293,8 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 # tSNE
 ## Caluclate tSNE and Show Metrics
 
+### The wine dealer would like to know if there is a possible grouping for the different wines. This would allow him to organise his wines in an appropriate fashion.
+
 **Available metrics in the returend TSNE object**  
 
 https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
@@ -333,12 +335,12 @@ rbPal <- colorRampPalette(c('red','yellow'))
 # creates 10 colour buckets based on quality
 df_scaled_df$Col_qual <- rbPal(8)[as.numeric(cut(df_scaled_df$quality,breaks = 10))]
 # creates 10 colour buckets based on ph
-df_scaled_df$Col_pH <- rbPal(7)[as.numeric(cut((df_scaled_df$pH),breaks = 10))]
+df_scaled_df$Col_pH <- rbPal(8)[as.numeric(cut((df_scaled_df$pH),breaks = 10))]
 
 ## 2 ## We can choose colouring to be df_scaled_df$Col or e.g. df$quality
 # Plot data and labels:
-plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "TSNE coloured by quality")
-plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "TSNE coloured by pH")
+plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "tSNE coloured by quality")
+plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "tSNE coloured by pH")
 
 str(tsne)
 ```
@@ -346,9 +348,11 @@ str(tsne)
 
 **Interpretation: **
 
-* Could not find any meaningful patterns
-* I tried visually colouring the plotted datapoints by pH,citric.acid and quality
-* The visual categorisation does not seem to work for these values
+* Could not find any meaningful patterns or a sensible groups
+* The plots were coloured by pH and quality but could not establish clear relationships
+* The visual categorisation does not seem to be useful for this dataset
+
+### The tSNE could not find any meaningful groupings for the wines. 
 
 
 
