@@ -148,7 +148,8 @@ summary(df)
 * **betweenss:** The between-cluster sum of squares, i.e. totss-tot.withinss.
 * **iter:** The number of (outer) iterations.
 * **ifault:** integer: indicator of a possible algorithm problem – for experts.
-```{r eval=FALSE, include=FALSE}
+
+```{r}
 
 # Run K-means for k=2
 k <- 2 #defining to work with two clusters
@@ -202,7 +203,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 * **height:** a set of n-1 real values (non-decreasing for ultrametric trees). The clustering height: that is, the value of the criterion associated with the clustering method for the particular agglomeration.
 * **merge:** an n-1 by 2 matrix. Row i of merge describes the merging of clusters at step i of the clustering. If an element j in the row is negative, then observation -j was merged at this stage. If j is positive then the merge was with the cluster formed at the (earlier) stage j of the algorithm. Thus negative entries in merge indicate agglomerations of singletons, and positive entries indicate agglomerations of non-singletons.
 
-```{r eval=FALSE, include=FALSE}
+```{r}
 
 # Calculate distances between data (default method = euclidean):
 distances <- dist(df_scaled, method = "euclidean")
@@ -259,7 +260,7 @@ plot(hc, main = "Dendogram Plot with Euclidean distance, method complete")
 res.dist <- get_dist(df_scaled, method = "kendall")
 
 # Visualize the dissimilarity matrix
-fviz_dist(res.dist, lab_size = 8)
+fviz_dist(res.dist, lab_size = 8)  # takes some time ~1min
 
 # Compute hierarchical clustering with different linkage types:"single", "complete", "average", "centroid", "ward.D", "ward.D2"
 res.hc <- hclust(res.dist, method = "ward")
@@ -331,6 +332,7 @@ tsne <- Rtsne(df_scaled_df[!duplicated(df_scaled_df), ], dims = 2,
             max_iter = 500)
 
 ```
+
 
 ```{r}
 ## 1 ## This first section concerning colouring allows us to colour scaled numeric columns
@@ -516,7 +518,9 @@ dimnames(data)[2]  # label successfully removed
 # For plotting evaluation against colorcode
 # category (~ classification solution)
 row_label <- as.factor(rownames(data))
-qualities <- as.character(df$quality)
+# qualities <- as.character(df$quality)
+colors <- c("empty", "empty", "violet", "green", "blue", "red", "orange", "black")
+colors <- colors[df$quality]
 
 data_train_matrix <- as.matrix(scale(data))
 
@@ -571,19 +575,20 @@ plot(som_model, type = "changes")
 # Explore training results
 plot(som_model, type = "count")  # how many datapoints are in a neuron
 plot(som_model, type = "mapping",  # show datapoints per neuron, 5 - 10 datapoints 
-     col = qualities[row_label])      # per neuron is the target range
+     col = colors[row_label])      # per neuron is the target range
 # one color per wine quality
 
 plot(  # show sample of datapoints, wine quality and number of row
   som_model,
   type = "mapping",
   labels = (rownames(data)),
-  col = qualities[row_label]
+  col = colors[row_label]
 )
 
 ```
 
 ## Results interpretation part one
+
 
 Model description:
 SOM of size 4x4 with a hexagonal topology and a bubble neighbourhood function.
@@ -592,7 +597,15 @@ Distance measure(s) used: sumofsquares.
 Training data included: 1359 objects.
 Mean distance to the closest unit in the map: 4.076.
 
-The Counts and Mapping plot show two cluster of neurons: One with a lot of data points (n > 75) and the other with few data points (n <= 75) 
+The Counts and Mapping plot show two cluster of neurons: One with a lot of data points (n > 75) and the other with few data points (n <= 75). Wine quality legend for the colors:
+
+- 3: "violet" 
+- 4: "green" 
+- 5: "blue" 
+- 6:"red" 
+- 7: "orange"  
+- 8: "black" 
+
 
 
 
@@ -649,7 +662,7 @@ plot(
   type = "mapping",
   labels = (rownames(data)),
   bgcol = pretty_palette[som_cluster],
-  col = qualities[row_label]
+  col = colors[row_label]
 )
 add.cluster.boundaries(som_model, som_cluster)
 ```
