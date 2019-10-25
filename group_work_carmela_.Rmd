@@ -1,7 +1,16 @@
 ---
 title: "group_work"
 output:
+<<<<<<< HEAD
   html_document: default
+=======
+  html_document:
+    df_print: paged
+    theme: united
+    toc: yes
+    number_sections: true
+    toc_float: true
+>>>>>>> 368d280f5140feea2308ab9992ec76609f1093bf
   pdf_document: default
 ---
 
@@ -17,6 +26,13 @@ One could apply the following methods to the data.
 
 <br><br>
 
+# Initial Situation
+We are a consulting company, which offers consulting around the topic Machine Learning. In the present order a wine dealer from South Africa engaged us to examine his collected data. The wine merchant sells the wine mainly to hotels, restaurants but also to private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
+Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 12 predictors are included. 
+Our task now is to form certain clusters in the available data, so that the wine dealer can differentiate his wines not only according to grape varieties, countries of origin and growing regions, but also according to other criteria.
+One idea that he has expressed is that he can make an initial classification of the quality of the wine on the basis of the alcohol content or the pH value.
+
+
 # Setup
 ## Preparation
 
@@ -30,20 +46,16 @@ Install package checkpoint prior to running to following code in your shell:
 # library for TSNE
 library(Rtsne)
 library(corrplot)
-library(gplots) # for making own color code (e.g. for heatmap representation)
+library(gplots)  # for making own color code (e.g. for heatmap representation)
 library(kohonen)
 library(plot3D)
-library(factoextra) # more complexe library than standard R library; all methods for distance & linkage available
-library(stringr)
-library(dplyr)
+library(factoextra)  # more complexe library than standard R library; all methods 
+                     # for distance & linkage available
 library(dendextend)
 library(ape)
-<<<<<<< HEAD
-library(RColorBrewer) # for making own color code (e.g. for heatmap representation)
-=======
-# RColorBrewer is used to show different shades of colours
+library(RColorBrewer)  # for making own color code (e.g. for heatmap representation)
+                       # RColorBrewer is used to show different shades of colours
 library(RColorBrewer)
->>>>>>> c216d2ff096e9a59e112e6360fa65339d581f011
 library(rmarkdown)
 library(DataExplorer)
 library(tidyverse)  # SOM
@@ -52,15 +64,6 @@ library(checkpoint)
 ```
 
 
-## Set checkpoint
-
-
-```{r set checkpoint, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-# ignore for the moment
-# checkpoint("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")  # not working properly @Ramon, check with Tanadini
-# checkpointRemove("2019-09-20", checkpointLocation = "C:/devsbb/R/checkpoint")
-# .libPaths()
-```
 
 # Method selection
 One can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
@@ -74,7 +77,7 @@ rm(list = ls(all = TRUE))
 
 # load data
 df <- read.csv("winequality-red.csv")
-
+saveRDS(df, "data/winequality-red.Rds")
 
 # count the missing values (NA) in the data frame
 sum(is.na(df))
@@ -84,6 +87,8 @@ sapply(df, is.numeric)
 
 # scale the data
 df_scaled <- scale(df)
+class(df_scaled)  # is now a matrix
+
 as_tibble(df_scaled)
 
 ```
@@ -96,13 +101,27 @@ glimpse(df)
 # View(df)
 summary(df)
 
-create_report(df)  # not working @Ramon, works @Lars & @Carmela
+# create_report(df)  
 ```
 
-
+<br><br>
 
 
 # k-Means-Clustering
+
+# 
+
+One can use this Shiny widget to explore different variable settings combined with k number of clusters. 
+
+```{r message=FALSE, warning=FALSE}
+options(shiny.deprecation.messages=FALSE)
+library(rmdexamples)
+kmeans_cluster(df)
+```
+
+We continue to do a proper analysis in the next section. 
+
+<br><br>
 
 ## Caluclate k-means-clustering and Show Metrics
 
@@ -120,16 +139,16 @@ create_report(df)  # not working @Ramon, works @Lars & @Carmela
 ```{r}
 
 # Run K-means for k=2
-k <- 2 #defining two clusters
+k <- 2 #defining to work with two clusters
 km.out <- kmeans(df_scaled, k,nstart =50)
 plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
 
 # Check the outcome
 km.out
 km.out$withinss
-km.out$tot.withinss
+cat("withinss =", km.out$tot.withinss)
 
-# Find best value for k
+# Find best value for k 
 wss <- 0 # intialise
 wss_dif <- 0
 number_of_clusters_tested <- 20
@@ -152,11 +171,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 
 *Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
 
-<<<<<<< HEAD
-*Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be used with caution.
-=======
-Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
->>>>>>> c216d2ff096e9a59e112e6360fa65339d581f011
+*Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
 
 
 
@@ -187,15 +202,16 @@ hc <- hclust(distances)
 dend <- as.dendrogram(hc)
 
 # Graphical representation
-plot(dend)
+plot(dend, main = "Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
-str(dend)
+# str(dend)  # computionally very expensive, takes about 2 minutes
 
 
 
 # Transpose data:
 df_transposed <- t(df_scaled)
+
 
 # Calculate distances between data (default method = euclidean):
 distances_t <- dist(df_transposed, method = "euclidean")
@@ -207,7 +223,7 @@ hc_t <- hclust(distances_t)
 dend_t <- as.dendrogram(hc_t)
 
 # Graphical representation
-plot(dend_t)
+plot(dend_t, main = "Transposed Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
 str(dend_t)
@@ -224,7 +240,7 @@ str(dend_t)
 
 # Compute hierarchical clustering with euclidean distance and complete method:
 hc <- hclust(dist(df_scaled, method = "euclidean"),method="complete")
-plot(hc)
+plot(hc, main = "Dendogram Plot with Euclidean distance, method complete")
 
 # Missing correlation-based methods (spearman, kendall): using library(factoextra) for these methods
 # Compute the dissimilarity matrix with different distance types: "euclidean", "manhattan", "pearson", "spearman", "kendall"
@@ -267,9 +283,9 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 
 *Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
 
-*Dissimilarity Matrix: tbd
+*Dissimilarity Matrix: There isn't a lot of similarity in the dataset. The diagonal members are defined as zero. This means that zero is the measure of dissimilarity between an element and itself.
 
-*Heatmaps: tbd
+*Heatmaps: High values are red, low values are yellow in the plot. The main pattern to look for is a rectangular area of about the same color. That suggests a group of rows that is correlated for the corresponding group of columns.
 
 
 
@@ -277,9 +293,7 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 # tSNE
 ## Caluclate tSNE and Show Metrics
 
-### The wine dealer would like to know if there is a possible grouping for the different wines. This would allow him to organise his wines in an appropriate fashion.
-
-**Available metrics in the returend tSNE object**  
+**Available metrics in the returend TSNE object**  
 
 https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 
@@ -287,6 +301,13 @@ https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 * **perplexity:** it can be interpreted as a smooth measure of the effective number of neighbours (usuallly between 5 and 50) 
 * **max_iter:** Maximum iterations
 * **Theta:** speed/accuracy trade-off,increase for speed but less accuracy (default 0.5)
+
+
+```{r}
+# define parameter
+dims <- "tbd"
+# ...
+```
 
 ```{r}
 # the dateframe needed to be re-defined as dataframe for the code to work properly
@@ -316,8 +337,8 @@ df_scaled_df$Col_pH <- rbPal(7)[as.numeric(cut((df_scaled_df$pH),breaks = 10))]
 
 ## 2 ## We can choose colouring to be df_scaled_df$Col or e.g. df$quality
 # Plot data and labels:
-plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "tSNE coloured by quality")
-plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "tSNE coloured by pH")
+plot(tsne$Y, col=df_scaled_df$Col_qual, pch=16, main = "TSNE coloured by quality")
+plot(tsne$Y, col=df_scaled_df$Col_pH, pch=16, main = "TSNE coloured by pH")
 
 str(tsne)
 ```
@@ -326,10 +347,8 @@ str(tsne)
 **Interpretation: **
 
 * Could not find any meaningful patterns
-* I tried visually colouring the plotted datapoints by pH and quality
+* I tried visually colouring the plotted datapoints by pH,citric.acid and quality
 * The visual categorisation does not seem to work for these values
-
-### The tSNE could not find any meaningful groupings for the wines. 
 
 
 
@@ -395,6 +414,7 @@ pca_out_reduced = prcomp(df_reduced, scale=TRUE)
 
 # Create Biplot on reduced dataset
 biplot(pca_out_reduced,scale=0)
+# create_report(df)
 
 ```
 
@@ -501,7 +521,7 @@ som_grid <- somgrid(xdim = 4, ydim = 4,
                     topo = "hexagonal")
 
 # Train the model
-som_model <- ?som(
+som_model <- som(
   data_train_matrix,
   grid = som_grid,
   rlen = 1000,  # number of iterations
