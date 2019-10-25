@@ -1,16 +1,12 @@
 ---
 title: "group_work"
 output:
-<<<<<<< HEAD
-  html_document: default
-=======
   html_document:
     df_print: paged
     theme: united
     toc: yes
     number_sections: true
     toc_float: true
->>>>>>> 368d280f5140feea2308ab9992ec76609f1093bf
   pdf_document: default
 ---
 
@@ -66,7 +62,18 @@ library(checkpoint)
 
 
 # Method selection
-One can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
+We created an overview and comparison about the covered methods within the course "Applied Machine Learning and Predictive Modelling II":
+
+```{r}
+knitr::include_graphics("documents/Methods picture.PNG")
+```
+
+A zoomable version of the overview can be found [here](https://www.evernote.com/l/Ai9WPKBaEfFEzqgLvlABkPvsZA7qA0CgPjI/).
+
+<br>
+
+Furthermore one can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
+
 
 
 # Data 
@@ -113,7 +120,7 @@ summary(df)
 
 One can use this Shiny widget to explore different variable settings combined with k number of clusters. 
 
-```{r message=FALSE, warning=FALSE}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 options(shiny.deprecation.messages=FALSE)
 library(rmdexamples)
 kmeans_cluster(df)
@@ -136,7 +143,7 @@ We continue to do a proper analysis in the next section.
 * **betweenss:** The between-cluster sum of squares, i.e. totss-tot.withinss.
 * **iter:** The number of (outer) iterations.
 * **ifault:** integer: indicator of a possible algorithm problem – for experts.
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 # Run K-means for k=2
 k <- 2 #defining to work with two clusters
@@ -190,7 +197,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 * **height:** a set of n-1 real values (non-decreasing for ultrametric trees). The clustering height: that is, the value of the criterion associated with the clustering method for the particular agglomeration.
 * **merge:** an n-1 by 2 matrix. Row i of merge describes the merging of clusters at step i of the clustering. If an element j in the row is negative, then observation -j was merged at this stage. If j is positive then the merge was with the cluster formed at the (earlier) stage j of the algorithm. Thus negative entries in merge indicate agglomerations of singletons, and positive entries indicate agglomerations of non-singletons.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 # Calculate distances between data (default method = euclidean):
 distances <- dist(df_scaled, method = "euclidean")
