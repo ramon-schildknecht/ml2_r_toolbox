@@ -40,24 +40,21 @@ Install package checkpoint prior to running to following code in your shell:
 ## Load packages
 
 ```{r install_packages, message=FALSE, warning=FALSE}
-# library for TSNE
-library(Rtsne)
-library(corrplot)
+
+library(Rtsne) # library for TSNE
+library(corrplot) # it is a graphical display of a correlation matrix, confidence interval 
 library(gplots)  # for making own color code (e.g. for heatmap representation)
-library(kohonen)
-library(plot3D)
-library(factoextra)  # more complexe library than standard R library; all methods 
-                     # for distance & linkage available
-library(dendextend)
-library(ape)
-library(RColorBrewer)  # for making own color code (e.g. for heatmap representation)
-                       # RColorBrewer is used to show different shades of colours
-library(RColorBrewer)
-library(rmarkdown)
-library(DataExplorer)
-library(tidyverse)  # SOM
-library(kohonen)  # SOM
-library(checkpoint)
+library(kohonen) # functions to train self-organising maps (SOMs)
+library(plot3D) # functions for viewing 2-D & 3-D data, including perspective plots, slice plots, scatter plots, etc.
+library(factoextra)  # more complexe library than standard R library; all methods for distance & linkage available
+library(dendextend) # can be used to represent the data in “fan” diagrams
+library(ape) # can be used to represent the data in “fan” diagrams
+library(RColorBrewer)  # for making own color code and show different shades of colors (e.g. for heatmap representation)
+library(rmarkdown) # convert R Markdown documents into a variety of formats
+library(DataExplorer) # automated data exploration process for analytic tasks and predictive modeling 
+library(tidyverse)  # library for SOM
+library(kohonen)  # library for SOM
+library(checkpoint) # package to solve the problem of package reproducibility in R
 ```
 
 
