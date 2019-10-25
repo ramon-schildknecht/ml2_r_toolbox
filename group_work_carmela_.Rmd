@@ -26,6 +26,13 @@ One could apply the following methods to the data.
 
 <br><br>
 
+# Initial Situation
+We are a consulting company, which offers consulting around the topic Machine Learning. In the present order a wine dealer from South Africa engaged us to examine his collected data. The wine merchant sells the wine mainly to hotels, restaurants but also to private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
+Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 12 predictors are included. 
+Our task now is to form certain clusters in the available data, so that the wine dealer can differentiate his wines not only according to grape varieties, countries of origin and growing regions, but also according to other criteria.
+One idea that he has expressed is that he can make an initial classification of the quality of the wine on the basis of the alcohol content or the pH value.
+
+
 # Setup
 ## Preparation
 
