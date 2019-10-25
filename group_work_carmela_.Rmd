@@ -39,17 +39,15 @@ Install package checkpoint prior to running to following code in your shell:
 # library for TSNE
 library(Rtsne)
 library(corrplot)
-library(gplots)
-library(gplots) # for making own color code (e.g. for heatmap representation)
+library(gplots)  # for making own color code (e.g. for heatmap representation)
 library(kohonen)
 library(plot3D)
-library(factoextra) # more complexe library than standard R library; all methods for distance & linkage available
-library(stringr)
-library(dplyr)
+library(factoextra)  # more complexe library than standard R library; all methods 
+                     # for distance & linkage available
 library(dendextend)
 library(ape)
-library(RColorBrewer) # for making own color code (e.g. for heatmap representation)
-# RColorBrewer is used to show different shades of colours
+library(RColorBrewer)  # for making own color code (e.g. for heatmap representation)
+                       # RColorBrewer is used to show different shades of colours
 library(RColorBrewer)
 library(rmarkdown)
 library(DataExplorer)
@@ -72,7 +70,7 @@ rm(list = ls(all = TRUE))
 
 # load data
 df <- read.csv("winequality-red.csv")
-
+saveRDS(df, "data/winequality-red.Rds")
 
 # count the missing values (NA) in the data frame
 sum(is.na(df))
@@ -99,10 +97,24 @@ summary(df)
 # create_report(df)  
 ```
 
-
+<br><br>
 
 
 # k-Means-Clustering
+
+# 
+
+One can use this Shiny widget to explore different variable settings combined with k number of clusters. 
+
+```{r message=FALSE, warning=FALSE}
+options(shiny.deprecation.messages=FALSE)
+library(rmdexamples)
+kmeans_cluster(df)
+```
+
+We continue to do a proper analysis in the next section. 
+
+<br><br>
 
 ## Caluclate k-means-clustering and Show Metrics
 
@@ -129,7 +141,7 @@ km.out
 km.out$withinss
 cat("withinss =", km.out$tot.withinss)
 
-# Find best value for k
+# Find best value for k 
 wss <- 0 # intialise
 wss_dif <- 0
 number_of_clusters_tested <- 20
