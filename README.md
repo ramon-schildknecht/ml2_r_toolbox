@@ -18,7 +18,7 @@ This is a taks from the module "Applied Machine Learning and Predictive Modellin
 
 
 ## Results
-- main file (name to be defined): Shows the [following methods](tbd) with a wine dataset as example. One can find the purpose, advantages and disadvantages of each method. Additionally there are some possible interpretations for the given dataset. 
+- main file (name to be defined): Shows the [following methods](https://github.com/ramon-schildknecht/ml2_r_toolbox/blob/master/Methods%20picture.PNG) with a wine dataset as example. One can find the purpose, advantages and disadvantages of each method. Additionally there are some possible interpretations for the given dataset. 
 - Shiny widget for k-means (exploring_dataset_with_shiny_widget_k_means): One can explore the wine dataset interactively with this application. 
 
 
