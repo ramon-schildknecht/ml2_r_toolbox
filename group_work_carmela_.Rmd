@@ -418,7 +418,7 @@ dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is t
 # other values for scale give slightly different biplots with different interpretations.
 # cex (character expension factor): configures the labeling size of the observations (black) and the predictors (red)
 # cex: reduze labeling size of the observations to 0.5 in order to make the plot more readable.
-biplot(pca_out,scale=0, cex=c(0.5,1)) 
+biplot(pca_out,scale=0, cex=c(0.3,0.8)) 
 
 ```
 
