@@ -17,6 +17,11 @@ This is a taks from the module "Applied Machine Learning and Predictive Modellin
 - how to interprete the results, supported with our wine data set example
 
 
+## Results
+- main file (name to be defined): Shows the [following methods](https://www.evernote.com/l/Ai9WPKBaEfFEzqgLvlABkPvsZA7qA0CgPjI) with a wine dataset as example. One can find the purpose, advantages and disadvantages of each method. Additionally there are some possible interpretations for the given dataset. 
+- Shiny widget for k-means (exploring_dataset_with_shiny_widget_k_means): One can explore the wine dataset interactively with this application. 
+
+
 ## Outlook
 We are developing a R Toolbox to apply different unsupervised machine learning algorithms that work with almost any input datasets.
 
