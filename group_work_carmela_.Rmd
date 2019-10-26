@@ -392,7 +392,7 @@ pca_out$scale   # show scale
 
 # Rotation matrix provides the principal component of the loadings.
 dim(pca_out$rotation) # p*p matrix whereas p is the number of variables (loadings)
-pca_out$rotation
+round(pca_out$rotation, digit=2) # show loadings for each predictor. Round result on 2 digits.
 
 # x matrix provides the principal component of the scores.
 dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is the number of principal componentes
@@ -403,51 +403,48 @@ dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is t
 
 **Interpretation: **
   
-* The features quality and aclcohol are similar
-* free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
-* fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
+* PC2 mostly represents quality, alcohol content and sulfur content of a wine. Alcohol and qulity appear to be positivly correlated. So wines with a higher alcohol content tend to have a higher quality rating. But based on this we cannot conculde any causal relationship between the  alcohol content of a wine and its quality. There might be other confounding factors affecting both variables. 
+* Wines with a high quality rating and more alcohol are located at the bottom of the biplot.
+* Wines with a high sulfur content are respresented at the top of the biplot.
+* PC1 mostly represents how acidic or basic (alkaline) a wine is. All predictors related to acidity (fixed.acidity (0.49), volatile acidity (-0.27), citric.acid (0.47) adn pH (-0.43)) have relatively high loadings for PC1. Fixed.acitiy and pH value point in the opposite direction in the biplot (negatively correlated). pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive. 
+* Although there do not result any clear clusters from the biplot, the dealer could use PC1 as a scoring for the acidity of a wine. The left side of the biplot represent the morebasic (alkaline) wines, whereas the right side represents the more acidic wines.
+* Also the dealer could use the biplot as a visual instrument to select high quality wines that are either acidic or basic (alkaline). Also if a customer prefers a wine with high alcohol content, the dealer could select a wine from the bottom of the plot. The dealer could furthermore ask the customer if they'd prefer a rather acidic or rather basic wine. Based on the customers preference, the dealer would either select a wine from the bottom left or bottom right.
+
 
 ```{r}
 
 # Create Biplot 
 # scale=0 ensures that the arrows are scaled to represent the loadings; 
 # other values for scale give slightly different biplots with different interpretations.
-biplot(pca_out,scale=0)
-
-
-# Create Biplot with reduced sample to get a better overview
-
-# Sample Data
-set.seed(2)
-sample_1=sample(1:nrow(df), nrow(df)/3) # sample a third of the data for training data
-df_reduced=df[sample_1,]
-
-# Calculate PCA on reduced dataset
-pca_out_reduced = prcomp(df_reduced, scale=TRUE)
-
-# Create Biplot on reduced dataset
-biplot(pca_out_reduced,scale=0)
-# create_report(df)
+# cex (character expension factor): configures the labeling size of the observations (black) and the predictors (red)
+# cex: reduze labeling size of the observations to 0.5 in order to make the plot more readable.
+biplot(pca_out,scale=0, cex=c(0.5,1)) 
 
 ```
 
 
-## Interpretation of Biplot
+## Plausibility check on Biplot
+  
+Those plots are used to check the plausibility of the biplot. Can the correlations discovered in the biplot, also be observed in a xy-plot of the predictors? It turns out in most cases it can. From the four plots below, the only plot which does not fully support the correlation discovered in the biplot, is the Quality-Sulfur-Plot. The Quality-Sulfur-Plot indicates that low and high quality wines usually have a low total sulfur dioxid, whereas mid-range quality wines have a lot more variation in the total sulfur dioxid.
+
 ```{r}
-plot(df$quality,df$alcohol)
-plot(df$fixed.acidity,df$pH)
-plot(df$quality,df$total.sulfur.dioxide)
-plot(df$chlorides,df$density)
+plot(df$quality,df$alcohol, main="Quality-Alcohol-Plot")
+plot(df$fixed.acidity,df$pH, main="Acidity-pH-Plot")
+plot(df$quality,df$total.sulfur.dioxide, main="Quality-Sulfur-Plot")
+plot(df$chlorides,df$density, main="Chlorids-Density-Plot")
 
 ```
 
 
 ## Show variance explained by certain Principal Components
 
-**summary() on a prcomp object**
+**summary() on a prcomp object: **  
+  
 Summary shows the standard deviation, proportion of variance and cumulative proportion of variance of each principal component
   
-**Result:** 6 Principal Components explain more than 80% of the variance in the data.
+**Result:**  
+  
+From the Plot "Cumulative Proportion of Variance per PC" once can see that 6 Principal Components explain more than 80% of the variance in the data.
 ```{r}
 # screeplot shows the variance of each prinicipal component
 screeplot(pca_out)
