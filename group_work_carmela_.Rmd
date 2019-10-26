@@ -361,7 +361,7 @@ pca_out$scale   # show scale
 
 # Rotation matrix provides the principal component of the loadings.
 dim(pca_out$rotation) # p*p matrix whereas p is the number of variables (loadings)
-pca_out$rotation
+round(pca_out$rotation, digit=2) # round rotation (PC loadings) on 2 digits
 
 # x matrix provides the principal component of the scores.
 dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is the number of principal componentes
@@ -370,11 +370,13 @@ dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is t
 
 ## Create Biplot
 
-**Interpretation: **
+**Interpretation from Biplot: **
   
-* The features quality and aclcohol are similar
-* free.sulfur dioxide and total.sulfur dioxide point into the opposite direction as quality. So it can be expected that sulfur content of a wine is an indicator for bad quality. -> not true according to plot further below
-* fixed.acitiy and pH point in the opposite direction. pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive
+* PC1 mostly represents quality, alcohol content and sulfur content of a wine.
+* PC2 mostly represents how acidic or basic (alkaline) a wine is.
+* alcohol and qulity are positiv correlated
+* quality and sulfur content is negatively correlated
+* fixed.acitiy and pH value point in the opposite direction (negatively correlated). pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive.
 ```{r}
 
 # Create Biplot 
@@ -400,7 +402,9 @@ biplot(pca_out_reduced,scale=0)
 ```
 
 
-## Interpretation of Biplot
+## Plausibility check on Biplot
+  
+Those plots are used to check the plausibility of the biplot. The correlations discovered in the biplot can also be observed by the correlation plots below.
 ```{r}
 plot(df$quality,df$alcohol)
 plot(df$fixed.acidity,df$pH)
