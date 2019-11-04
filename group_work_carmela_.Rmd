@@ -12,7 +12,7 @@ output:
 
 # Overview
 
-One could apply the following methods to the data. 
+One of the following methods could be applied to the data. 
 
 - Kmeans clustering 
 - Hierarchical Clustering (HC) & Heat Maps 
@@ -23,8 +23,8 @@ One could apply the following methods to the data.
 <br><br>
 
 # Initial Situation
-We are a consulting company, which offers consulting around the topic Machine Learning. In the present order a wine dealer from South Africa engaged us to examine his collected data. The wine merchant sells the wine mainly to hotels, restaurants but also to private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
-Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 11 predictors are included. We like to get insights especially for red wine. <br>
+We are a consulting company, which offers consulting around the topic of Machine Learning. Our current consultation has been commissioned by a South Afican wine dealerto examine his collected data. The wine merchant sells most of his wine to hotels, restaurants as well as private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
+Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 11 predictors are included. We are charged with generating insight for the red wine collection. <br>
 
 Our task now is to form certain clusters in the available data, so that the wine dealer can differentiate his red wines not only according to grape varieties, countries of origin and growing regions, but also according to other criteria. <br> 
 One idea that he has expressed is that he can make an initial classification of the quality of the wine on the basis of the alcohol content or the pH value.
@@ -47,8 +47,8 @@ library(gplots)  # for making own color code (e.g. for heatmap representation)
 library(kohonen) # functions to train self-organising maps (SOMs)
 library(plot3D) # functions for viewing 2-D & 3-D data, including perspective plots, slice plots, scatter plots, etc.
 library(factoextra)  # more complexe library than standard R library; all methods for distance & linkage available
-library(dendextend) # can be used to represent the data in “fan” diagrams
-library(ape) # can be used to represent the data in “fan” diagrams
+library(dendextend) # can be used to represent the data in ???fan??? diagrams
+library(ape) # can be used to represent the data in ???fan??? diagrams
 library(RColorBrewer)  # for making own color code and show different shades of colors (e.g. for heatmap representation)
 library(rmarkdown) # convert R Markdown documents into a variety of formats
 library(DataExplorer) # automated data exploration process for analytic tasks and predictive modeling 
@@ -70,7 +70,7 @@ A zoomable version of the overview can be found [here](https://www.evernote.com/
 
 <br>
 
-Furthermore one can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
+Furthermore the following decision support tool can be used to find a suitable methods for the problem at hand: <br> https://mod.rapidminer.com/#app
 
 
 
@@ -108,8 +108,8 @@ Description of the Variables
 
 1. fixed acidity: most acids involved with wine or fixed or nonvolatile (do not evaporate readily)
 2. volatile acidity: the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
-3. citric acid: found in small quantities, citric acid can add ‘freshness’ and flavor to wines
-4. residual sugar: the amount of sugar remaining after fermentation stops, it’s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
+3. citric acid: found in small quantities, citric acid can add ???freshness??? and flavor to wines
+4. residual sugar: the amount of sugar remaining after fermentation stops, it???s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
 5.chlorides: the amount of salt in the wine
 6. free sulfur dioxide: the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
 7. total sulfur dioxide: amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
@@ -147,7 +147,7 @@ summary(df)
 * **cluster:** A vector of integers (from 1:k) indicating the cluster to which each point is allocated
 * **betweenss:** The between-cluster sum of squares, i.e. totss-tot.withinss.
 * **iter:** The number of (outer) iterations.
-* **ifault:** integer: indicator of a possible algorithm problem – for experts.
+* **ifault:** integer: indicator of a possible algorithm problem ??? for experts.
 
 ```{r}
 
@@ -182,7 +182,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 
 *First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
 
-*Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+*Second plot: With increasing number of clusters the total within cluster sum of squares always decreases. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
 
 *Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
 
@@ -498,7 +498,7 @@ How: Mapping from a higher-dimensional input space to a lower-dimensional map sp
 **Central Caveats:**
 
 - Influence/choice of parameters not very clear 
-- Not building generative model (not “understanding” the data, cannot reproduce similar ones) mapping 
+- Not building generative model (not ???understanding??? the data, cannot reproduce similar ones) mapping 
 
 
 ```{r}
