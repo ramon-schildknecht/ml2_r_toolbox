@@ -12,7 +12,7 @@ output:
 
 # Overview
 
-One could apply the following methods to the data. 
+One of the following methods could be applied to the data.
 
 - Kmeans clustering 
 - Hierarchical Clustering (HC) & Heat Maps 
@@ -23,8 +23,9 @@ One could apply the following methods to the data.
 <br><br>
 
 # Initial Situation
-We are a consulting company, which offers consulting around the topic Machine Learning. In the present order a wine dealer from South Africa engaged us to examine his collected data. The wine merchant sells the wine mainly to hotels, restaurants but also to private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
-Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 11 predictors are included. We like to get insights especially for red wine. <br>
+We are a consulting company, which offers consulting around the topic of Machine Learning. Our current consultation has been commissioned by a South Afican wine dealerto examine his collected data. The wine merchant sells most of his wine to hotels, restaurants as well as private customers. The wine dealer has a showroom in which he presents a selection of his wines to his customers. Based on his many years of experience, he evaluates the quality of each wine in order to advise his customers in the best possible way.
+Therefore, he has a database in which the quality of the wines, but also other characteristics are stored. These include, for example, the pH value, acidity, alcohol content, density, etc. A total of 11 predictors are included. We are charged with generating insight for the red wine collection. <br>
+
 
 Our task now is to form certain clusters in the available data, so that the wine dealer can differentiate his red wines not only according to grape varieties, countries of origin and growing regions, but also according to other criteria. <br> 
 One idea that he has expressed is that he can make an initial classification of the quality of the wine on the basis of the alcohol content or the pH value.
@@ -70,7 +71,7 @@ A zoomable version of the overview can be found [here](https://www.evernote.com/
 
 <br>
 
-Furthermore one can you use this decision support tool to get the suitable methods for the predominant problem: <br> https://mod.rapidminer.com/#app
+Furthermore the following decision support tool can be used to find a suitable methods for the problem at hand: <br> https://mod.rapidminer.com/#app
 
 
 
@@ -182,7 +183,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 
 *First plot: K-means Clustering with k=2 is not very useful. This plot is only useful if you have a dataset with only two dimensions.
 
-*Second plot: With increasing number of clusters the total within cluster sum of squares decreases always. To decide which k is the best, look for the ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
+*Second plot: With an increasing number of clusters the total within cluster sum of squares always decreases. To decide which k is the best, we look for an ellbow in the plot. In this plot there is no clear ellbow visible. Therefore we go for k = 2.
 
 *Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
 
@@ -294,9 +295,9 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 
 *Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
 
-*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch hight which means that these two predictors are closely related to each other.  
+*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch height which means that these two predictors are closely related to each other.  
 
-*Dissimilarity Matrix: There isn't a lot of similarity in the dataset. The diagonal members are defined as zero. This means that zero is the measure of dissimilarity between an element and itself.
+*Dissimilarity Matrix: There is not a lot of similarity in the dataset. The diagonal members are defined as zero. This means that zero is the measure of dissimilarity between an element and itself.
 
 *Heatmaps: High values are red, low values are yellow in the plot. The main pattern to look for is a rectangular area of about the same color. That suggests a group of rows that is correlated for the corresponding group of columns.
 
@@ -306,11 +307,8 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 # tSNE
 ## Caluclate tSNE and Show Metrics
 
-### The wine dealer would like to know if there is a possible grouping for the different wines. This would allow him to organise his wines in an appropriate fashion.
 
 **Available metrics in the returend TSNE object**  
-
-https://www.analyticsvidhya.com/blog/2017/01/t-sne-implementation-r-python/
 
 * **dims:**  the number of dimensions the data should be reduced to
 * **perplexity:** it can be interpreted as a smooth measure of the effective number of neighbours (usuallly between 5 and 50) 
@@ -407,8 +405,8 @@ dim(pca_out$x) # n * p matrix whereas n is the number of observations and p is t
 * Wines with a high quality rating and more alcohol are located at the bottom of the biplot.
 * Wines with a high sulfur content are respresented at the top of the biplot.
 * PC1 mostly represents how acidic or basic (alkaline) a wine is. All predictors related to acidity (fixed.acidity (0.49), volatile acidity (-0.27), citric.acid (0.47) adn pH (-0.43)) have relatively high loadings for PC1. Fixed.acitiy and pH value point in the opposite direction in the biplot (negatively correlated). pH value is a metric to measure the acidity. A low pH value indicates high acidity whereas a high pH value indicate a low acidity (alkaline). So the result in the biplot is conclusive. 
-* Although there do not result any clear clusters from the biplot, the dealer could use PC1 as a scoring for the acidity of a wine. The left side of the biplot represent the morebasic (alkaline) wines, whereas the right side represents the more acidic wines.
-* Also the dealer could use the biplot as a visual instrument to select high quality wines that are either acidic or basic (alkaline). Also if a customer prefers a wine with high alcohol content, the dealer could select a wine from the bottom of the plot. The dealer could furthermore ask the customer if they'd prefer a rather acidic or rather basic wine. Based on the customers preference, the dealer would either select a wine from the bottom left or bottom right.
+* Although there are no clear clusters from the biplot, the dealer could use PC1 as a scoring for the acidity of a wine. The left side of the biplot represent the morebasic (alkaline) wines, whereas the right side represents the more acidic wines.
+* Also the dealer could use the biplot as a visual instrument to select high quality wines that are either acidic or basic (alkaline). Also if a customer prefers a wine with high alcohol content, the dealer could select a wine from the bottom of the plot. The dealer could furthermore ask the customer if they would prefer an acidic or a base wine. Based on the customers preference, the dealer would either select a wine from the bottom left or bottom right.
 
 
 ```{r}
@@ -666,15 +664,15 @@ add.cluster.boundaries(som_model, som_cluster)
 
 ## Final interpretation: what are possible wine clusters?
 
-The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive is the feature. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is useless this way. <br>
+The Codes plot shows the importance of each feature within a single neuron. The closer a value is to the edge of the circle, the more distinctive the feature is. There seems to be just a few neurons with high feature values (~6). The dendogramm contains too many data points and is therefore not suited for analytical purposes. <br>
 
-The mapping plot indicates how many clusters are reasonable given the trained model. There could be several classes per cluster. The wine dealer learns therefore three new possible clusters:  
+The mapping plot indicates how many clusters are reasonable given the trained model. There could be several classes per cluster. Three new possible clusters can be proposed:  
 
 - The blue cluster shows 12.5% of all neurons. It contains low data points (see "Counts plot") with strong characteristics for citric acid and density (check "Codes plot"). This cluster contains wines with a lot of "freshness" and flavor. 
-- The green cluster shows 12.5% of all neurons as well. It contains low data points as well (see "Counts plot") with strong values for the variables in pH and alcohol (check "Codes plot"). These wines tend to are rather very basic and "palatable". 
-- The orange cluster contains 75% of all neurons. It contains the estimated more than 80% (check "Codes plot") of all data points with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (check "Codes plot"). These wines seem pretty sweet and salty at the same time. The sweetness should remain a long time thanks to the high sulphate values. 
+- The green cluster shows 12.5% of all neurons as well. It contains low data points as well (see "Counts plot") with strong values for the variables in pH and alcohol (check "Codes plot"). These wines tend to be base and "palatable". 
+- The orange cluster contains 75% of all neurons. It containsmore than 80% (check "Codes plot") of all data points with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (check "Codes plot"). These wines seem pretty sweet and salty at the same time. The sweetness should remain a long time thanks to the high sulphate values. 
 
-Of course expertise knowledge of the dataset and the wine domain is essential to derive valuable insights from the results. With the SOM results we will try campaign promoting "fresh & flavorable wine" as well as "Salty but long-lasting sweet wine". We are looking forward to delight many existing and new customers! 
+Of course expertise knowledge of the dataset and the wine domain is essential to derive valuable insights from the results. With the SOM results we propose promoting "fresh & flavorable wines" as well as "Salty but long-lasting sweet wines". 
 
 **outlook:** The wine dealer could wish to get more details about the single neurons within the three clusters. One could test more grid sizes respectively the number of neurons as input for the SOM and try to get even more insights.
 
