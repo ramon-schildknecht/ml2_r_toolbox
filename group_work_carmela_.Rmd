@@ -154,7 +154,7 @@ summary(df)
 
 # Run K-means for k=2
 k <- 2 #defining to work with two clusters
-km.out <- kmeans(df_scaled, k,nstart =50)
+km.out <- kmeans(df_scaled,k,nstart =50)
 plot(df_scaled, col =(km.out$cluster+1), main ="K-Means Clustering", xlab ="", ylab ="", pch =20, cex =2)
 
 # Check the outcome
@@ -187,7 +187,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 
 *Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
 
-
+*To sum up, for the wine case no conclusions can be drawn from this single plot. To draw conclusions, one would have to select two features and compare them on the x- and y-axis. Then you would see different clusters, here for example with k=2 i.e. two clusters, related to the certain x- and y-axis features. To show this possibility, we have created a Shiny widget, which can be tested here:
 
 
 # Hierarchical Clustering (HC)
@@ -226,7 +226,6 @@ plot(dend, main = "Dendogram plot")
 # Transpose data:
 df_transposed <- t(df_scaled)
 
-
 # Calculate distances between data (default method = euclidean):
 distances_t <- dist(df_transposed, method = "euclidean")
 
@@ -240,7 +239,7 @@ dend_t <- as.dendrogram(hc_t)
 plot(dend_t, main = "Transposed Dendogram plot")
 
 # Alternative, standard output representation (can be useful for ctrl+find specific things in big trees)
-str(dend_t)
+# str(dend_t) # computionally very expensive, takes about 2 minutes
 
 
 
@@ -295,7 +294,7 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 
 *Dendogram plot: This plot is not very useful. It contains a lot of overloaded information. The height of the cut in the dendogram has comparable role as the number of K in K-means clustering: it controls the number of clusters obtained.
 
-*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch height which means that these two predictors are closely related to each other.  
+*Transposed Dendogram plot: This plot is way more useful and contains information to work with. The lower the altitude of a branch is, the closer the predictors are to each other. For example fixed.acidity and citric.acid have the lowest branch height which means that these two predictors are closely related to each other. Also free.sulfur.dioxide and total.sulfur.dioxide are closely related to each other which does make sense because both features are the same chemical element (sulfur). The most surprising finding from this transposed dendogram plot is that quality and alcohol concentration of wines seem to be close. It seems like wines of higher quality contain more alcohol than wines of lower quality which can be interesting for our wine dealer. 
 
 *Dissimilarity Matrix: There is not a lot of similarity in the dataset. The diagonal members are defined as zero. This means that zero is the measure of dissimilarity between an element and itself.
 
