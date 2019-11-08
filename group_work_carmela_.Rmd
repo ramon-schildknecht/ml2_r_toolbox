@@ -48,8 +48,8 @@ library(gplots)  # for making own color code (e.g. for heatmap representation)
 library(kohonen) # functions to train self-organising maps (SOMs)
 library(plot3D) # functions for viewing 2-D & 3-D data, including perspective plots, slice plots, scatter plots, etc.
 library(factoextra)  # more complexe library than standard R library; all methods for distance & linkage available
-library(dendextend) # can be used to represent the data in “fan” diagrams
-library(ape) # can be used to represent the data in “fan” diagrams
+library(dendextend) # can be used to represent the data in ???fan??? diagrams
+library(ape) # can be used to represent the data in ???fan??? diagrams
 library(RColorBrewer)  # for making own color code and show different shades of colors (e.g. for heatmap representation)
 library(rmarkdown) # convert R Markdown documents into a variety of formats
 library(DataExplorer) # automated data exploration process for analytic tasks and predictive modeling 
@@ -109,8 +109,8 @@ Description of the Variables
 
 1. fixed acidity: most acids involved with wine or fixed or nonvolatile (do not evaporate readily)
 2. volatile acidity: the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
-3. citric acid: found in small quantities, citric acid can add ‘freshness’ and flavor to wines
-4. residual sugar: the amount of sugar remaining after fermentation stops, it’s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
+3. citric acid: found in small quantities, citric acid can add ???freshness??? and flavor to wines
+4. residual sugar: the amount of sugar remaining after fermentation stops, it???s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
 5.chlorides: the amount of salt in the wine
 6. free sulfur dioxide: the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
 7. total sulfur dioxide: amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
@@ -148,7 +148,7 @@ summary(df)
 * **cluster:** A vector of integers (from 1:k) indicating the cluster to which each point is allocated
 * **betweenss:** The between-cluster sum of squares, i.e. totss-tot.withinss.
 * **iter:** The number of (outer) iterations.
-* **ifault:** integer: indicator of a possible algorithm problem – for experts.
+* **ifault:** integer: indicator of a possible algorithm problem ??? for experts.
 
 ```{r}
 
@@ -494,7 +494,7 @@ How: Mapping from a higher-dimensional input space to a lower-dimensional map sp
 **Central Caveats:**
 
 - Influence/choice of parameters not very clear 
-- Not building generative model (not “understanding” the data, cannot reproduce similar ones) mapping 
+- Not building generative model (not ???understanding??? the data, cannot reproduce similar ones) mapping 
 
 
 ```{r}
@@ -670,12 +670,10 @@ The mapping plot indicates how many clusters are reasonable given the trained mo
 - The green cluster shows 12.5% of all neurons as well. It contains low data points as well (see "Counts plot") with strong values for the variables in pH and alcohol (check "Codes plot"). These wines tend to be base and "palatable". 
 - The orange cluster contains 75% of all neurons. It containsmore than 80% (check "Codes plot") of all data points with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (check "Codes plot"). These wines seem pretty sweet and salty at the same time. The sweetness should remain a long time thanks to the high sulphate values. 
 
-Of course expertise knowledge of the dataset and the wine domain is essential to derive valuable insights from the results. With the SOM results we propose promoting "fresh & flavorable wines" as well as "Salty but long-lasting sweet wines". 
-
 **outlook:** The wine dealer could wish to get more details about the single neurons within the three clusters. One could test more grid sizes, respectively the number of neurons as input for the SOM and try to get even more insights.
 
 # Conclusion
-For the wine dealer there are following take-aways for pre-selection of his wines. In the Hierarchical Clustering Transposed Dendogram plot the most surprising finding is that the quality and alcohol content of wine seem to be close. It seems like wines of higher quality contain more alcohol than wines of lower quality. Although this does not imply any causality, this could be an important finding for our wine dealer.
-Additionally, the dealer could use the Principal Component Analysis (PCA) biplot as a visual instrument to select high quality wines that are either acidic or base (alkaline). Also, if a customer prefers a wine with high alcohol content, the dealer could select a wine from the bottom of the plot. The dealer could furthermore ask the customer if they’d prefer a rather acidic or rather basic wine. Based on the customers preference, the dealer would either select a wine from the bottom left or bottom right of the PCA biplot.
-The wine dealer could further cluster his wine collection according to the Self-Organising Maps (SOM). Following wine segments could be created: "Fresh and favorable" wines corresponding to wines with strong citric acid and density characteristics (corresponds to blue SOM cluster). "Intense and soothing" for wines with high pH and alcohol levels (corresponds to green SOM cluster). "Rich and long-lasting wines" for wines with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (corresponds to orange SOM cluster).
+For the wine dealer there are following take-aways concerning the pre-selection of his wines. In the Hierarchical Clustering Transposed Dendogram plot the most surprising finding is that the quality and alcohol content of wine seem to be close. It seems like wines of higher quality contain more alcohol than wines of lower quality. Although this does not imply any causality, this could be an important finding for our wine dealer.
+Additionally, the dealer could use the Principal Component Analysis (PCA) biplot as a visual instrument to select high quality wines that are either acidic or base (alkaline). Also, if a customer prefers a wine with high alcohol content, the dealer could select a wine from the bottom of the plot. The dealer could furthermore ask the customer if they would prefer an acidic or base wine. Based on the customers preference, the dealer would either select a wine from the bottom left or bottom right of the PCA biplot.
+The wine dealer could further cluster his wine collection according to the Self-Organising Maps (SOM). The following wine segments could be created: "Fresh and flavorable" wines corresponding to wines with strong citric acid and density characteristics (blue SOM cluster). "Intense and soothing" for wines with high pH and alcohol levels (green SOM cluster). "Rich and long-lasting wines" for wines with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (orange SOM cluster).
 
