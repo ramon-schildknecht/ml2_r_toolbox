@@ -187,7 +187,7 @@ plot(2:number_of_clusters_tested, wss_dif, type="b", xlab="Number of Clusters",y
 
 *Third plot: This plot shows the differnce between the i-th and the i-1th value of the total within-cluster sum of squares. This plot should be viewed with caution as it compares the sum of squares to the previous (k-1) sum of squares. An alternative would be to subtract the mean from every sum of squares.
 
-*To sum up, for the wine case no conclusions can be drawn from this single plot. To draw conclusions, one would have to select two features and compare them on the x- and y-axis. Then you would see different clusters, here for example with k=2 i.e. two clusters, related to the certain x- and y-axis features. To show this possibility, we have created a Shiny widget, which can be tested in this additional RMarkdown: exploring_dataset_with_shiny_widget_k_means.Rmd
+> To sum up, for the wine case no conclusions can be drawn from this single plot. To draw conclusions, one would have to select two features and compare them on the x- and y-axis. Then you would see different clusters, here for example with k=2 i.e. two clusters, related to the certain x- and y-axis features. To show this possibility, we have created a Shiny widget, which can be tested in this additional RMarkdown: exploring_dataset_with_shiny_widget_k_means.Rmd
 
 
 # Hierarchical Clustering (HC)
@@ -299,7 +299,6 @@ heatmap.2(df_scaled, Rowv=as.dendrogram(hc1), Colv=as.dendrogram(hc2), col=palet
 *Dissimilarity Matrix: There is not a lot of similarity in the dataset. The diagonal members are defined as zero. This means that zero is the measure of dissimilarity between an element and itself.
 
 *Heatmaps: High values are red, low values are yellow in the plot. The main pattern to look for is a rectangular area of about the same color. That suggests a group of rows that is correlated for the corresponding group of columns.
-
 
 
 
@@ -673,8 +672,10 @@ The mapping plot indicates how many clusters are reasonable given the trained mo
 
 Of course expertise knowledge of the dataset and the wine domain is essential to derive valuable insights from the results. With the SOM results we propose promoting "fresh & flavorable wines" as well as "Salty but long-lasting sweet wines". 
 
-**outlook:** The wine dealer could wish to get more details about the single neurons within the three clusters. One could test more grid sizes respectively the number of neurons as input for the SOM and try to get even more insights.
+**outlook:** The wine dealer could wish to get more details about the single neurons within the three clusters. One could test more grid sizes, respectively the number of neurons as input for the SOM and try to get even more insights.
 
-
-
+# Conclusion
+For the wine dealer there are following take-aways for pre-selection of his wines. In the Hierarchical Clustering Transposed Dendogram plot the most surprising finding is that the quality and alcohol content of wine seem to be close. It seems like wines of higher quality contain more alcohol than wines of lower quality. Although this does not imply any causality, this could be an important finding for our wine dealer.
+Additionally, the dealer could use the Principal Component Analysis (PCA) biplot as a visual instrument to select high quality wines that are either acidic or base (alkaline). Also, if a customer prefers a wine with high alcohol content, the dealer could select a wine from the bottom of the plot. The dealer could furthermore ask the customer if they’d prefer a rather acidic or rather basic wine. Based on the customers preference, the dealer would either select a wine from the bottom left or bottom right of the PCA biplot.
+The wine dealer could further cluster his wine collection according to the Self-Organising Maps (SOM). Following wine segments could be created: "Fresh and favorable" wines corresponding to wines with strong citric acid and density characteristics (corresponds to blue SOM cluster). "Intense and soothing" for wines with high pH and alcohol levels (corresponds to green SOM cluster). "Rich and long-lasting wines" for wines with partially strong characteristics for fixed acidity, residual sugar, chlorides and sulphates (corresponds to orange SOM cluster).
 
