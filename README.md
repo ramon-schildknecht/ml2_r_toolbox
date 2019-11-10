@@ -16,6 +16,8 @@ This is a task from the module "Applied Machine Learning and Predictive Modellin
 - how to use these machine learning algorithms
 - how to interprete the results, supported with our wine data set example
 
+## Methods
+The covered methods can be found in the folder "documents"
 
 ## Results
 - main file "Good Practice Toolbox for Analyzing Unstructured Data.Rmd" in folder "deliverables" shows the [following methods](https://www.evernote.com/l/Ai9WPKBaEfFEzqgLvlABkPvsZA7qA0CgPjI) with a wine dataset as example. One can find the purpose, advantages and disadvantages of each method. Additionally there are some possible interpretations for the given dataset. 
