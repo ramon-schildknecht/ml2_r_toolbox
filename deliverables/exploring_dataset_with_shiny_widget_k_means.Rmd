@@ -13,6 +13,11 @@ One can use this Shiny widget to explore very easily different variable settings
 ```{r message=FALSE, warning=FALSE}
 options(shiny.deprecation.messages=FALSE)
 df <- readRDS("data/winequality-red.Rds")
+
+# install rmdexamplex this way
+if (!require("devtools")) install.packages("devtools")
+# you may also need to update packages: update.packages(ask = FALSE)
+devtools::install_github("rstudio/rmdexamples")
 library(rmdexamples)
 kmeans_cluster(df)
 ```
