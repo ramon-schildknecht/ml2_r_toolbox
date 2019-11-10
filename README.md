@@ -51,5 +51,5 @@ One can apply own datasets to the provided code. May the data force be with you!
         \   .-" .-"-.-"  .' .'j \  /   ;/
          \ / .-"   /.     .'.' ;_:'    ;
           :-""-.`./-.'     /    `.___.'
-                \ `t  ._  /  bug :F_P:
+                \ `t  ._  /  
                  "-.t-._:'
