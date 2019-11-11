@@ -21,7 +21,7 @@ The covered methods can be found in the folder "documents"
 
 ## Results
 - main file "Good Practice Toolbox for Analyzing Unstructured Data.Rmd" in folder "deliverables": shows the [following methods](https://www.evernote.com/l/Ai9WPKBaEfFEzqgLvlABkPvsZA7qA0CgPjI) with a wine dataset as example. One can find the purpose, advantages and disadvantages of each method. Additionally there are some possible interpretations for the given dataset. The rendered file can be found directly here on [RPubs](https://rpubs.com/ramon_schildknecht/toolbox_unsupervised_learning_methods). 
-- Shiny widget for k-means ("exploring_dataset_with_shiny_widget_k_means" in folder "deliverables"): One can explore the wine dataset interactively with this application. 
+- Shiny widget for k-means ("exploring_dataset_with_shiny_widget_k_means" in folder "deliverables"): One can explore the wine dataset interactively with this application [here on shinyapps.io](https://rasch.shinyapps.io/exploring_dataset_with_shiny_widget_k_means/). The file "demo_exploring_dataset_with_shiny_widget_k_means.gif" shows some examples.
 
 
 ## Added Value
