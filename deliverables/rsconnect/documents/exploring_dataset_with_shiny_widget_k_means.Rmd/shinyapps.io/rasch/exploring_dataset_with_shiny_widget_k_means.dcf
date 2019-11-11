@@ -1,0 +1,13 @@
+name: exploring_dataset_with_shiny_widget_k_means
+title: exploring_dataset_with_shiny_widget_k_means
+username:
+account: rasch
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1452829
+bundleId: 2579780
+url: https://rasch.shinyapps.io/exploring_dataset_with_shiny_widget_k_means/
+when: 1573469703.62617
+asMultiple: TRUE
+asStatic: FALSE
+ignoredFiles: data/Methods picture.PNG|data/winequality-red.csv|Good Practice Toolbox for Analyzing Data using Unsupervised Learning Methods.Rmd
